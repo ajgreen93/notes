@@ -1,0 +1,22 @@
+.gitignore
+
+# LATEX #
+################
+*.aux
+*.bbl
+*.gz
+*.out
+*.blg
+*.txt
+*.log
+*.nav
+*.snm
+*.toc
+
+# Graphics
+*.pdf
+*.png
+
+# R code
+*.Rhistory
+*.rds
