@@ -34,7 +34,7 @@ where $\bX \in \Reals^{n \times p}$ is matrix with rows $\bX_{i\cdot} = \bx_i$. 
 \subsection{Stieltjes transform}
 The Stieltjes transform is a key analytical device used to prove asymptotic convergence of spectral distributions of random matrices. The {\bf Stieltjes transform} of a measure $\mu$ is defined for $z \in \mathbb{C}\setminus\supp(\mu)$ as
 $$
-m_{\mu}(z) := \int \frac{1}{t - z} \,d\mu(t).
+m_{\mu}(z) := \int \frac{1}{t - z} \,d\mu(t), \quad m_{\mu}(z) \in C_{+}.
 $$
 The measure $\mu$ can be recovered from its Stieltjes transform via the {\bf Stieltjes inversion formula}. At a given $\tau \in \supp(\mu)$, if $\lim_{\varepsilon \to 0} \Im m_{\mu}(\tau + \varepsilon i)$ exists then $m_{\mu}$ is continuous at $t$, with density $f_{\mu}(\tau) = \frac{1}{\pi}\lim_{\varepsilon} \Im m_{\mu}(\tau + \varepsilon i)$. To see this:
 \begin{align*}
@@ -52,27 +52,52 @@ $$
 $$
 Suppose that $\hat{H}_n(t)$ converges weakly to a limiting spectral distribution $H(t)$ as $p \to \infty$. Then the spectral distribution $\hat{F}_n(t)$ of the sample covariance $\bS$ also converges to continuum limit $F_{\gamma,H}(t)$, which we will call a {\bf generalized Marchenko-Pastur distribution}. Random matrix theory provides the analytical tools necessary to prove this result and describe the resulting continuum limit.
 
+\subsection{Silverstein's equation}
+Let $m_{\gamma,H}$ be the Stieltjes transform of the limiting generalized Marchenko-Pastur distribution $F_{\gamma,H}$. The companion transform is $v_{\gamma,H} := \gamma m_{\gamma,H}(z) - \frac{(1 - \gamma)}{z}$. It can be shown, via the leave-one-out approach, that the companion transform satisfies the self-consistency equation
+\begin{equation}
+	\label{eqn:silverstein}
+	z = -\frac{1}{v(z)} + \gamma \int \frac{t}{1 + tv(z)} \,dH(t), \quad \textrm{for all $z \in \C_{+}$.}
+\end{equation}
+
+
+
+\subsection{Stieltjes inversion formula}
+
+\section{Examples}
+
+\subsection{Identity covariance}
+
 The most basic case is $\bSigma = \bI, \gamma < 1$, $\hat{H}_n(\tau) = H_1(\tau) = \1\{\tau \leq 1\}$. In this case $\hat{F}_n(t)$ converges weakly to the {\bf Marchenko-Pastur distribution} $F_{\gamma}(t)$. The Marchenko-Pastur distribution has a density $f_{\gamma}(t)$ supported on $[t^{-},t^{+}] := [1 - \sqrt{\gamma}, 1 + \sqrt{\gamma}]$, with 
 $$
 f_{\gamma}(t) := \frac{\sqrt{(t^{+} - t)(t - t^{-})}}{2 \pi \gamma t}, \quad \textrm{for $t \in [t^{-},t^{+}]$.}
 $$
 If additionally $\gamma > 1$, then $F_{\gamma}$ has an atom at $0$ of magnitude $1 - 1/\gamma$. 
 
-\subsection{Silverstein's equation}
-Let $m_{\gamma}$ be the Stieltjes transform of the limiting generalized Marchenko-Pastur distribution $F_{\gamma,H}$. It can be shown that $m_{\gamma}$ satisfies the fixed point equation
+To show this, notice that when $H = \delta_1$ the self-consistency equation~\eqref{eqn:silverstein} reduces to
 $$
-z = -\frac{1}{m(z)} + \gamma \int \frac{t}{1 + tm(z)} \,dH(t), \quad \textrm{for all $z \in \C_{+}$.}
+z = -\frac{1}{v(z)} + \frac{\gamma}{1 + v(z)}.
 $$
-In the specific case of $\bSigma = \bI$ and $H = H_1$, this is simply
+Using the definition of $m$, this can be rearranged to 
 $$
-z = -\frac{1}{m(z)} + \gamma \frac{1}{1 + m(z)}.
+m(z)= \frac{1}{(1 - \gamma) - \gamma m z - z}.
 $$
-Rearranging and solving the resulting quadratic equation for $m$ gives
+Taking the resulting quadratic equation and solving for $m$ yields two solutions, 
 $$
-m(z) = 
+\frac{(1 - \gamma - z) \pm \sqrt{(1 + \gamma - z)^2 - 4 \gamma}}{2 \gamma z}.
 $$
-
-\subsection{Stieltjes inversion formula}
+If we adopt the usual convention that $\sqrt{z} \in \mathbb{C}_{+}$ refers to the positive branch of a complex number, then recalling that $m(z) \in \mathbb{C}_{+}$, it follows that 
+\begin{align*}
+m_{\gamma}(z) 
+& = \frac{(1 - \gamma - z) + \sqrt{(1 + \gamma - z)^2 - 4 \gamma}}{2 \gamma z} \\
+& = \frac{(1 - \gamma - z) + \sqrt{( (1 + \sqrt{\gamma})^2 - z)((1 - \sqrt{\gamma})^2 - z)}}{2 \gamma z}.
+\end{align*}
+From here we can compute the density of the Marchenko-Pastur distribution by applying the Stieltjes inversion formula:
+\begin{align*}
+f_{\gamma}(t) 
+& = \frac{1}{\pi}\lim_{\varepsilon \to 0} \Im m_{\gamma}(t + i \varepsilon) \\
+& = \frac{1}{\pi} \Im \frac{\sqrt{( (1 + \sqrt{\gamma})^2 - t)((1 - \sqrt{\gamma})^2 - t)}}{2 \gamma t} \\
+& = \frac{1}{\pi} \frac{\sqrt{( (1 + \sqrt{\gamma})^2 - t)(t - (1 - \sqrt{\gamma})^2)}}{2 \gamma t}.
+\end{align*}
 
 	
 	
