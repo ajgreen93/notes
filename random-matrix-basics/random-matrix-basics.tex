@@ -23,6 +23,8 @@
 \newcommand{\bI}{\boldsymbol{I}}
 \newcommand{\bZ}{\boldsymbol{Z}}
 
+\newcommand{\convweak}{\Rightarrow}
+
 \title{ {\bf The Basics of Random Matrix Theory} }
 
 \begin{document}
@@ -51,10 +53,19 @@ The measure $\mu$ can be recovered from its Stieltjes transform via the {\bf Sti
 \begin{align*}
 	\lim_{\varepsilon \to 0}\Im m_{\mu}(\tau + \varepsilon i) 
 	& = 
-	\lim_{\varepsilon \to 0}\int \Im(\frac{1}{t - (\tau + \varepsilon i)} \,d\mu(t) \\
+	\lim_{\varepsilon \to 0}\int \Im\Big(\frac{1}{t - (\tau + \varepsilon i)}\Big) \,d\mu(t) \\
 	& = \lim_{\varepsilon \to 0} \int \frac{\varepsilon}{(t - \tau)^2 + \varepsilon^2} \,d\mu(t) \\
-	& = \frac{1}{\pi}f(\tau).
+	& = \pi f(\tau),
 \end{align*} 
+with the last equality following since the Poisson kernels $P_{\varepsilon}(x) = \frac{1}{\pi} \frac{\varepsilon}{x^2 + \varepsilon^2}$ form a family of approximations to the identity. On the other hand, 
+$$
+\lim_{\varepsilon \to 0} - \varepsilon i m_{\mu}(t_0 + \varepsilon i) 
+= \lim_{\varepsilon \to 0} - \varepsilon i \int \frac{1}{t - (t_0 + \varepsilon i)} \,d\mu(t)
+= \lim_{\varepsilon \to 0} \mu(t_0) + o_{\varepsilon}(1)
+= \mu(t_0),
+$$  
+which can be used to recover the atoms of $\mu$.
+
 
 \section{Distribution of eigenvalues}
 Let $\hat{H}_n(\tau)$ represent the empirical spectral distribution of the eigenvalues of $\bSigma$:
@@ -133,13 +144,13 @@ Doing the same to the right hand side, we see that
 Rearranging~\eqref{eqn:approximate-silverstein} gives back~\eqref{eqn:silverstein}.
 
 \section{Distribution of eigenvectors}
-Define the following spectral distributions of a vector $\bbeta \in \Reals^p$:
+Define the following population and sample spectral distributions of a vector $\bbeta \in \Reals^p$:
 $$
-\wh{G}_n(\tau) := \frac{1}{\|\beta\|^2} \sum_{j = 1}^{p} (\bbeta_j^{\top} \bw_j)^2 \1\{\lambda_i(\bSigma) \leq \tau\}, \quad \wh{B}_n(\tau) := \frac{1}{\|\beta\|^2} \sum_{j = 1}^{p} (\bbeta_j^{\top} \bv_j)^2 \1\{\lambda_i(\bS) \leq \tau\}
+\wh{G}_n(\tau) := \frac{1}{\|\bbeta\|^2} \sum_{j = 1}^{p} (\bbeta_j^{\top} \bw_j)^2 \1\{\lambda_i(\bSigma) \leq \tau\}, \quad \wh{B}_n(\tau) := \frac{1}{\|\bbeta\|^2} \sum_{j = 1}^{p} (\bbeta_j^{\top} \bv_j)^2 \1\{\lambda_i(\bS) \leq \tau\}
 $$ 
-Obviously, taking $\bbeta = \bw$ means that $\wh{B}_n$ describes the correlation between the leading eigenspaces $\mathrm{span}\{\bv_1,\ldots,\bv_j\}$ and a true eigenvector of $\bSigma$.  The fundamental ideas used to derive the limit of the Stieltjes transform of $m_{\wh{B}_n}$ are the same as for eigenvalues, but the calculations seem a bit more tedious. 
+Obviously, taking $\bbeta = \bw$ means that $\wh{B}_n$ describes the correlation between the leading eigenspaces $\mathrm{span}\{\bv_1,\ldots,\bv_j\}$ and a true eigenvector of $\bSigma$. (Although, notice that the limit of $\wh{B}_n$ does not contain enough microscopic information to describe the asymptotic correlation between a population eigenvector and an individual sample eigenvector.)
 
-\subsection{The fixed point equation}
+The limit of $\wh{B}_n$, as $n,p \to \infty, p/n \to \gamma \in (0,\infty)$ and $\hat{G}_n \convweak G$, can be computed by finding the limit of the Stieltjes transform of $\hat{B}_n$ and applying the Stieltjes inversion formula. The fundamental ideas used to derive the limit of the Stieltjes transform of $m_{\wh{B}_n}$ are largely the same as for eigenvalues, but the calculations are a bit more tedious. 
 
 \subsection{The high-level argument}
 Introduce the resolvent notation 
@@ -176,13 +187,30 @@ establishing~\eqref{eqn:matrix-resolvent-convergence} upon taking $\wt{\bTheta} 
 
 One more empirical object $\hat{e}$ remains, but the preceding arguments show what its limit should be. In particular, taking $\bTheta = \bSigma$, we conclude that
 $$
-f(\hat{e}) := \frac{\hat{e}}{\gamma} - \frac{1}{n}\tr\big(\bSigma \bP(\hat{e})\big) \to 0.
+f_n(\hat{e}) := \frac{\hat{e}}{\gamma} - \frac{1}{n}\tr\big(\bSigma \bP(\hat{e})\big) \to 0.
 $$
-Letting $e$ be such that $f(e) = 0$, it can be shown that $f(\hat{e}) \to f(e) = 0$ implies $\hat{e} \to e$, and thus
+Letting $e_n^{\ast}$ be such that $f_n(e_n^{\ast}) = 0$, it can be shown that $f_n(\hat{e}) \to 0$ implies $\hat{e} \to e_n^{\ast}$, and thus
 \begin{equation}
-	\frac{1}{n}\tr(\bTheta \bQ) - \frac{1}{n}\tr(\bTheta \bP(e)) \to 0.
+	\frac{1}{n}\tr(\bTheta \bQ) - \frac{1}{n}\tr(\bTheta \bP(e_n^{\ast})) \to 0.
 \end{equation}
-
+Taking the limit of $\frac{1}{n}\tr(\bTheta \bP(e_n^{\ast}))$, we arrive at the following:
+$$
+m_{\hat{B}_n}(z) \to \int \frac{1}{\tau x(e^{\ast}) - z} \,dG(\tau), \quad \textrm{where} \quad e^{\ast} = \int \frac{\tau}{\tau x(e^{\ast}) - z} \,dH(\tau).
+$$
+Finally, manipulating the self-consistency equation for $e^{\ast}$ gives that $x^{\ast} = x(e^{\ast}) = -z v(z)$, since
+\begin{align*}
+	\frac{1}{x^{\ast}} - 1 = \gamma \int \frac{\tau}{\tau x^{\ast} - z} \,dH(\tau) \Longleftrightarrow z = \frac{z}{x^{\ast}} - \gamma \int \frac{\tau}{\frac{-\tau x^{\ast}}{z} + 1} \,dH(\tau),
+\end{align*}
+showing that $-x^{\ast}/z$ solves the self-consistency equation~\eqref{eqn:silverstein}. Thus, 
+$$
+m_{\hat{B}_n}(z) \to \int \frac{1}{-z \tau v(z) - z} \,dG(\tau) = -\frac{1}{z} \int \frac{1}{\tau v(z) + 1} \,dG(\tau) = m_{B}(z).
+$$
+\subsection{The inversion formula}
+Finally, applying the inversion formula, the density of $f_{B}(\theta)$ at any $\theta \in \supp(B)$ is given by
+$$
+f_{B}(\theta) = \frac{1}{\pi}\lim_{\varepsilon \to} \Im(m_B(\theta + \varepsilon i)) = \frac{1}{\theta} \int \frac{\tau \gamma f_{\gamma,H}(\theta)}{|1 + \tau v(\theta)|^2} \,dG(\tau),
+$$
+assuming this limit is finite. If the limit is infinite, then $\theta$ is an atom of $B$. 
 
 \section{Examples}
 
@@ -219,6 +247,10 @@ f_{\gamma}(t)
 & = \frac{1}{\pi} \Im \frac{\sqrt{( (1 + \sqrt{\gamma})^2 - t)((1 - \sqrt{\gamma})^2 - t)}}{2 \gamma t} \\
 & = \frac{1}{\pi} \frac{\sqrt{( (1 + \sqrt{\gamma})^2 - t)(t - (1 - \sqrt{\gamma})^2)}}{2 \gamma t}.
 \end{align*}
+
+\subsection{Spiked covariance, one-spike}
+The next case that will be considered is the one-spiked covariance model where $\bSigma = \ell \bbeta \bbeta^{\top} + \bI$, where $\|\bbeta\|^2 = 1$ and $\bbeta, \ell$ are fixed in $n$. As in the identity covariance model $\hat{H}_n(\tau) \to H_1(\tau)$, and so $\hat{F}_n(t) \to F_{\gamma}(t)$. However, $G_n \to \delta_{\ell + 1}$.  
+
 
 	
 	
