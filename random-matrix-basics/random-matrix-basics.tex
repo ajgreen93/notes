@@ -5,14 +5,23 @@
 \usepackage{xcolor}
 \usepackage{diagbox}
 \usepackage{xr-hyper}
-\graphicspath{ {../../code/fig/} }
 
 \newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\bz}{\boldsymbol{z}}
 \newcommand{\bv}{\boldsymbol{v}}
+\newcommand{\bw}{\boldsymbol{w}}
+\newcommand{\bq}{\boldsymbol{q}}
 \newcommand{\bX}{\boldsymbol{X}}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
 \newcommand{\bSigma}{\boldsymbol{\Sigma}}
+\newcommand{\bTheta}{\boldsymbol{\Theta}}
 \newcommand{\bS}{\boldsymbol{S}}
+\newcommand{\bB}{\boldsymbol{B}}
+\newcommand{\bQ}{\boldsymbol{Q}}
+\newcommand{\bP}{\boldsymbol{P}}
+\newcommand{\bR}{\boldsymbol{R}}
 \newcommand{\bI}{\boldsymbol{I}}
+\newcommand{\bZ}{\boldsymbol{Z}}
 
 \title{ {\bf The Basics of Random Matrix Theory} }
 
@@ -21,7 +30,9 @@
 \maketitle
 \RaggedRight
 
-\abstract{This document records some elementary background on random matrix theory for sample covariance matrices.}
+\begin{abstract}
+	This document records some elementary background on random matrix theory for sample covariance matrices.
+\end{abstract}
 
 \section{Introduction}
 
@@ -45,23 +56,133 @@ The measure $\mu$ can be recovered from its Stieltjes transform via the {\bf Sti
 	& = \frac{1}{\pi}f(\tau).
 \end{align*} 
 
-\section{Marchenko-Pastur distribution}
+\section{Distribution of eigenvalues}
 Let $\hat{H}_n(\tau)$ represent the empirical spectral distribution of the eigenvalues of $\bSigma$:
 $$
 \hat{H}_n(t) := \frac{1}{p} \sum_{i = 1}^{p} \1\{\lambda_i(\bSigma) \leq t\}.
 $$
-Suppose that $\hat{H}_n(t)$ converges weakly to a limiting spectral distribution $H(t)$ as $p \to \infty$. Then the spectral distribution $\hat{F}_n(t)$ of the sample covariance $\bS$ also converges to continuum limit $F_{\gamma,H}(t)$, which we will call a {\bf generalized Marchenko-Pastur distribution}. Random matrix theory provides the analytical tools necessary to prove this result and describe the resulting continuum limit.
+Suppose that $\hat{H}_n(t)$ converges weakly to a limiting spectral distribution $H(t)$ as $p \to \infty$. Then the spectral distribution $\hat{F}_n(t)$ of the sample covariance $\bS$ also converges to continuum limit $F_{\gamma,H}(t)$, which we will call a {\bf generalized Marchenko-Pastur distribution}. Random matrix theory provides the analytical tools necessary to prove this result and describe the resulting continuum limit. We give the result and sketch the proof.
 
-\subsection{Silverstein's equation}
+\subsection{The fixed point equation}
 Let $m_{\gamma,H}$ be the Stieltjes transform of the limiting generalized Marchenko-Pastur distribution $F_{\gamma,H}$. The companion transform is $v_{\gamma,H} := \gamma m_{\gamma,H}(z) - \frac{(1 - \gamma)}{z}$. It can be shown, via the leave-one-out approach, that the companion transform satisfies the self-consistency equation
 \begin{equation}
 	\label{eqn:silverstein}
 	z = -\frac{1}{v(z)} + \gamma \int \frac{t}{1 + tv(z)} \,dH(t), \quad \textrm{for all $z \in \C_{+}$.}
 \end{equation}
 
+\subsection{The companion transform}
+To begin, let $\bB = \bS^{\top} = \frac{1}{n} \bX^{\top} \bX \in \Reals^{n \times n}$. We will assume without loss of generality that $\bSigma$ is diagonal with elements $\tau_1,\ldots,\tau_p$, and write $\bB = \bQ \bSigma \bQ$, where $\bQ_{ij} \sim N(0,1/n)$, all independent. 
+
+The spectral distribution of $\bB$ is 
+$$
+\bar{F}_n(t) = \frac{1}{n}\sum_{i = 1}^{n} \1\{\lambda_i(\bB) \leq t\} = \gamma \hat{F}_n(t) + \max\{(1 - \gamma),0\} \1\{t \leq 0\},
+$$
+so the Stieltjes transform of $\bB$ is 
+$$
+v_n(z) = \frac{1}{n} \tr\Big((\bB - z\bI)^{-1}\Big) = \gamma m_n(z) - \frac{(1 - \gamma)}{z}.
+$$
+The transform $v_n$ is called the {\bf companion transform} of $m_n$. We will sketch an argument showing that the companion transform converges in the proportional asymptotic limit. To begin, we make the following simplifying approximations:
+\begin{align*}
+	\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)} & \approx \mathbb{E}[\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)}] \\
+	\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)} & \approx \mathbb{E}[\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}] \\
+	v_n(z) := \frac{1}{n}\tr(\bB - z \bI)^{-1} & \approx \mathbb{E} v_n(z) \\
+	\mathbb{E}{\frac{1}{n}\tr(\bB - z \bI)^{-1}} & \approx \mathbb{E}{\frac{1}{n}\tr(\bB_j - z \bI)^{-1}}.
+\end{align*}
 
 
-\subsection{Stieltjes inversion formula}
+\subsection{The high-level argument}
+Let $\bq_{(j)} \in \Reals^{n}$ be the $j$th column of $\bQ$ and notice that 
+$$
+\bB = \sum_{j = 1}^{p} \tau_j \bq_{(j)} \bq_{(j)}^{\top}.
+$$
+The key argument involves the concentration of terms of the form $\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)}$. Via the Sherman-Morrison formula, 
+$$
+(\bB - z\bI)^{-1} 
+= (\bB_j -  z \bI + \tau_j \bq_{(j)} \bq_{(j)}^{\top})^{-1} 
+= (\bB_j - z\bI)^{-1} - \frac{\tau_j (\bB_j - z\bI)^{-1} \bq_{(j)} \bq_{(j)}^{\top} (\bB_j - z\bI)^{-1}}{1 + \tau_j \bq_{(j)}^{\top}(\bB_j - z\bI)^{-1}\bq_{(j)}}
+$$
+hence,
+\begin{align*}
+\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)} 
+& = \bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)} - \frac{\tau_j}{1 + \tau_j \bq_{(j)}^{\top}(\bB_j - z\bI)^{-1}\bq_{(j)}} (\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)})^2 \\
+& = \frac{\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}}{1 + \tau_j \bq_{(j)}^{\top}(\bB_j - z\bI)^{-1}\bq_{(j)}}.
+\end{align*}
+Since $q_{(j)}$ and $B_j$ are independent,
+$$
+\mathbb{E}[\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}|\bX_{(-j)}] =  \frac{1}{n}\tr(\bB_j - z\bI)^{-1}.
+$$
+Thus, using two of our simplifying approximations, we have that
+$$
+\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}  \approx \mathbb{E}[\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}] = \E[\frac{1}{n}\tr(\bB_j - z\bI)^{-1}]  \approx \mathbb{E}v_n(z),
+$$
+and therefore
+$$
+\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)} \approx \frac{\E v_n(z)}{1 + \tau_j \E v_n(z)}.
+$$
+Now, multiplying the left hand side by $\tau_j$ and averaging over $j$ gives
+$$
+\frac{1}{p}\sum_{j = 1}^{p} \tau_j \bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)} = \frac{1}{p} \tr(\bB (\bB - z\bI)^{-1}) 
+= \frac{1}{p} \tr(\bI_n + z (\bB - z\bI)^{-1} ) = \frac{1}{\gamma} + \frac{1}{\gamma} v_n(z)
+\approx \frac{1}{\gamma} + \frac{1}{\gamma}\E v_n(z).
+$$
+Doing the same to the right hand side, we see that
+\begin{equation}
+\label{eqn:approximate-silverstein}
+\frac{1}{\gamma} + \frac{1}{\gamma} \E v_n(z) \approx \frac{1}{\gamma} + \frac{1}{\gamma}\E v_n(z) \approx \frac{1}{p} \sum_{j = 1}^{p} \frac{\tau_j \E v_n(z)}{1 + \tau_j \E v_n(z)} \to \int \frac{\tau \E v_n(z)}{1 + \tau \E v_n(z)} \,dH(\tau).
+\end{equation}
+Rearranging~\eqref{eqn:approximate-silverstein} gives back~\eqref{eqn:silverstein}.
+
+\section{Distribution of eigenvectors}
+Define the following spectral distributions of a vector $\bbeta \in \Reals^p$:
+$$
+\wh{G}_n(\tau) := \frac{1}{\|\beta\|^2} \sum_{j = 1}^{p} (\bbeta_j^{\top} \bw_j)^2 \1\{\lambda_i(\bSigma) \leq \tau\}, \quad \wh{B}_n(\tau) := \frac{1}{\|\beta\|^2} \sum_{j = 1}^{p} (\bbeta_j^{\top} \bv_j)^2 \1\{\lambda_i(\bS) \leq \tau\}
+$$ 
+Obviously, taking $\bbeta = \bw$ means that $\wh{B}_n$ describes the correlation between the leading eigenspaces $\mathrm{span}\{\bv_1,\ldots,\bv_j\}$ and a true eigenvector of $\bSigma$.  The fundamental ideas used to derive the limit of the Stieltjes transform of $m_{\wh{B}_n}$ are the same as for eigenvalues, but the calculations seem a bit more tedious. 
+
+\subsection{The fixed point equation}
+
+\subsection{The high-level argument}
+Introduce the resolvent notation 
+$$
+\bB = \frac{1}{n} \bSigma^{1/2} \bZ \bZ^{\top} \bSigma^{1/2}, \quad \bQ = (\bB - z\bI)^{-1}, \quad \bP = \bP(\hat{e}) = (x(\hat{e})\bSigma - z\bI)^{-1},
+$$
+where $\hat{e} = \frac{1}{p}\tr(\bSigma \bQ)$, and $x(\hat{e}) = \frac{1}{1 + \gamma \hat{e}}$. (Notice that the notation has shifted from last section.) The idea is to show that for a relatively general class of matrices $\bTheta$,
+\begin{equation}
+	\label{eqn:matrix-resolvent-convergence}
+	\frac{1}{n}\tr(\bTheta \bQ- \bTheta \bP) \to 0.
+\end{equation}
+This is accomplished by leave-one-out arguments. By the resolvent identity,
+$$
+\bP - \bQ = \bP (\bQ^{-1} - \bP^{-1}) \bQ = \bP (\bB - x(\hat{e})\bSigma) \bQ. 
+$$
+Writing $\bB = \frac{1}{n}\sum_{i = 1}^{n} \bSigma^{1/2} \bz_i \bz_i^{\top} \bSigma^{1/2}$, we have from Sherman-Morrison that
+\begin{align*}
+\bB \bQ 
+& = \frac{1}{n}\sum_{i = 1}^{n} \bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2}  \bQ \\
+& = \frac{1}{n}\sum_{i = 1}^{n} \bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2}  \Big(\bQ_i - \frac{\bQ_i \bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2} \bQ_i}{1 + \bz_i^{\top} \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i}\Big) \\
+& = \frac{1}{n}\sum_{i = 1}^{n} \bSigma^{1/2} \bz_i  \Big(1 - \frac{\bz_i^{\top}  \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i }{1 + \bz_i^{\top} \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i}\Big) \bz_i^{\top}  \bSigma^{1/2} \bQ_i \\
+& = \frac{1}{n}\sum_{i = 1}^{n} \frac{\bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2} \bQ_i}{{1 + \bz_i^{\top} \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i}}.
+\end{align*}
+Now, assuming as before that differences between empirical means and expectations are negligible, so that we can move between them as needed, we have that
+\begin{align*}
+\tr(\wt{\bTheta} \bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2} \bQ_i) & \approx \frac{1}{n}\tr(\wt{\bTheta} \bSigma \bQ) \\
+\bz_i^{\top} \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i & \approx \frac{1}{n}\tr(\bSigma \bQ) = \gamma \hat{e}.
+\end{align*}
+Thus 
+$$
+\tr(\wt{\bTheta} \bB \bQ) \approx \frac{\tr(\wt{\bTheta} \bSigma \bQ)}{1 + \gamma \hat{e}} =  x(\hat{e}) \tr(\wt{\bTheta} \bSigma \bQ),
+$$
+establishing~\eqref{eqn:matrix-resolvent-convergence} upon taking $\wt{\bTheta} = \bTheta \bP$. 
+
+One more empirical object $\hat{e}$ remains, but the preceding arguments show what its limit should be. In particular, taking $\bTheta = \bSigma$, we conclude that
+$$
+f(\hat{e}) := \frac{\hat{e}}{\gamma} - \frac{1}{n}\tr\big(\bSigma \bP(\hat{e})\big) \to 0.
+$$
+Letting $e$ be such that $f(e) = 0$, it can be shown that $f(\hat{e}) \to f(e) = 0$ implies $\hat{e} \to e$, and thus
+\begin{equation}
+	\frac{1}{n}\tr(\bTheta \bQ) - \frac{1}{n}\tr(\bTheta \bP(e)) \to 0.
+\end{equation}
+
 
 \section{Examples}
 
@@ -77,7 +198,7 @@ To show this, notice that when $H = \delta_1$ the self-consistency equation~\eqr
 $$
 z = -\frac{1}{v(z)} + \frac{\gamma}{1 + v(z)}.
 $$
-Using the definition of $m$, this can be rearranged to 
+Using the definition of $m = \gamma v - (1 - \gamma)/z$, this can be rearranged to 
 $$
 m(z)= \frac{1}{(1 - \gamma) - \gamma m z - z}.
 $$
