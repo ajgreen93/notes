@@ -22,6 +22,7 @@
 \newcommand{\bR}{\boldsymbol{R}}
 \newcommand{\bI}{\boldsymbol{I}}
 \newcommand{\bZ}{\boldsymbol{Z}}
+\newcommand{\Complex}{\mathbb{C}}
 
 \newcommand{\convweak}{\Rightarrow}
 
@@ -42,13 +43,14 @@ Suppose random vectors $\bx_1,\ldots,\bx_n \in \Reals^p$ are independently sampl
 $$
 \bS = \frac{1}{n}\sum_{i = 1}^{n} \bx_i \bx_i^{\top} = \frac{1}{n}\bX \bX^{\top},
 $$ 
-where $\bX \in \Reals^{n \times p}$ is matrix with rows $\bX_{i\cdot} = \bx_i$. Random matrix theory describes the asymptotic behavior of the sample eigenvalues $\lambda_i(\bS) = \lambda_i(\bS)$ and eigenvectors $\bv_i = \bv_i(\bS)$ of $\bS$, in the \emph{proportional asymptotics} limit $n,p \to \infty, p/n \to \gamma \in (0,\infty)$. 
+where $\bX \in \Reals^{n \times p}$ is matrix with rows $\bX_{i\cdot} = \bx_i$. Random matrix theory describes the asymptotic behavior of the sample eigenvalues $\lambda_i(\bS) = \lambda_i(\bS)$ and eigenvectors $\bv_i = \bv_i(\bS)$ of $\bS$, in the \emph{proportional asymptotics} limit $n,p \to \infty, p/n \to \gamma \in (0,\infty)$. This is achieved by through the device of the Stieltjes transform which packages the spectral information of $\bS$, and is the key analytical tool used to prove asymptotic convergence of spectral distributions of random matrices.
 
 \subsection{Stieltjes transform}
-The Stieltjes transform is a key analytical device used to prove asymptotic convergence of spectral distributions of random matrices. The {\bf Stieltjes transform} of a measure $\mu$ is defined for $z \in \mathbb{C}\setminus\supp(\mu)$ as
+The {\bf Stieltjes transform} of a measure $\mu$ is defined for $z \in \mathbb{C}\setminus\supp(\mu)$ as
 $$
 m_{\mu}(z) := \int \frac{1}{t - z} \,d\mu(t), \quad m_{\mu}(z) \in C_{+}.
 $$
+It is the case that $m_{\mu}$ is continuous in $\Complex_{+}$, though it is not continuous over all of its support. We will extend $m_{\mu}(z)$ by continuity to be defined for all $z \in \mathbb{C} \setminus0$, that is, for $x \in \supp(\mu) \setminus 0$, we will define $m_{\mu}(x) := \lim_{\varepsilon \to 0} m_{\mu}(x + \varepsilon i)$. 
 The measure $\mu$ can be recovered from its Stieltjes transform via the {\bf Stieltjes inversion formula}. At a given $\tau \in \supp(\mu)$, if $\lim_{\varepsilon \to 0} \Im m_{\mu}(\tau + \varepsilon i)$ exists then $m_{\mu}$ is continuous at $t$, with density $f_{\mu}(\tau) = \frac{1}{\pi}\lim_{\varepsilon} \Im m_{\mu}(\tau + \varepsilon i)$. To see this:
 \begin{align*}
 	\lim_{\varepsilon \to 0}\Im m_{\mu}(\tau + \varepsilon i) 
@@ -57,7 +59,7 @@ The measure $\mu$ can be recovered from its Stieltjes transform via the {\bf Sti
 	& = \lim_{\varepsilon \to 0} \int \frac{\varepsilon}{(t - \tau)^2 + \varepsilon^2} \,d\mu(t) \\
 	& = \pi f(\tau),
 \end{align*} 
-with the last equality following since the Poisson kernels $P_{\varepsilon}(x) = \frac{1}{\pi} \frac{\varepsilon}{x^2 + \varepsilon^2}$ form a family of approximations to the identity. On the other hand, 
+with the last equality following since the Poisson kernels $P_{\varepsilon}(x) = \frac{1}{\pi} \frac{\varepsilon}{x^2 + \varepsilon^2}$ form a family of approximations to the identity. On the other hand, it is also the case that
 $$
 \lim_{\varepsilon \to 0} - \varepsilon i m_{\mu}(t_0 + \varepsilon i) 
 = \lim_{\varepsilon \to 0} - \varepsilon i \int \frac{1}{t - (t_0 + \varepsilon i)} \,d\mu(t)
@@ -65,6 +67,33 @@ $$
 = \mu(t_0),
 $$  
 which can be used to recover the atoms of $\mu$.
+
+\subsection{Companion transform}
+The {\bf companion} to the Stieltjes transform is defined for $z \in \mathbb{C} \setminus (\supp(\mu) \cup \{0\})$ as,
+$$
+v_{\mu}(z) := \gamma m_{\mu}(z) - \frac{1 - \gamma}{z}.
+$$
+This is simply the Stieltjes transform of $\underline{\mu} = \gamma \mu + (1 - \gamma) \delta_{0}$, and it describes the limiting spectrum of the matrix
+$$
+\frac{1}{p} \sum_{i = 1}^{p} \bx_{(j)} \bx_{(j)}^{\top}.
+$$
+
+\subsection{Inverse of the companion Stieltjes transform}
+Finally, the inverse of the companion Stieltjes transform is denoted by $v^{-1}$, and satisfies
+$$
+v_{\mu}^{-1}(v_{\mu}(z)) = z, \quad \textrm{for all}\quad z \in \mathbb{C}\setminus\supp(\mu).
+$$
+The inverse can be useful in computing the support of $\mu$. It can be shown that a point $x \in \Reals$ does not belong to the interior of the support of $\mu$, $x \not\in \mathrm{int}~\supp(\mu)$ if and only if $v_{\mu}(x) \in \Reals$; this is intuitively correct as $v_{\mu}(x) \in \Reals$ if and only if $f_{\mu}(x) = 0$. It follows that 
+$$
+\Reals \setminus \mathrm{int}~\supp(\mu) = v_{\mu}^{-1}\Big(\mathrm{range}(v_{\mu}(x)) \cap \Reals\Big).
+$$
+If further follows that if $x \in \mathrm{range}(v_{\mu}(x))$ then $v_{\mu}'(x) > 0$, therefore at $m = v_{\mu}(x)$ we have $(v_{\mu}^{-1})'(m) > 0$. In other words, 
+$$
+\mathrm{range}(v_{\mu}(x)) \cap \Reals \subseteq \{m \in \Reals: m \neq 0, (v_{\mu}^{-1})'(m) > 0 \} := \mc{D}_{\mu}.
+$$
+In fact, the two are exactly equal, and it follows that $v_{\mu}^{-1}(\mc{D}_{\mu}) = \Reals \setminus \mathrm{int}~\supp(\mu)$.
+
+
 
 
 \section{Distribution of eigenvalues}
@@ -197,7 +226,7 @@ Taking the limit of $\frac{1}{n}\tr(\bTheta \bP(e_n^{\ast}))$, we arrive at the 
 $$
 m_{\hat{B}_n}(z) \to \int \frac{1}{\tau x(e^{\ast}) - z} \,dG(\tau), \quad \textrm{where} \quad e^{\ast} = \int \frac{\tau}{\tau x(e^{\ast}) - z} \,dH(\tau).
 $$
-Finally, manipulating the self-consistency equation for $e^{\ast}$ gives that $x^{\ast} = x(e^{\ast}) = -z v(z)$, since
+Finally, manipulating the above self-consistency equation for $e^{\ast}$ gives that $x^{\ast} = x(e^{\ast}) = -z v(z)$, since
 \begin{align*}
 	\frac{1}{x^{\ast}} - 1 = \gamma \int \frac{\tau}{\tau x^{\ast} - z} \,dH(\tau) \Longleftrightarrow z = \frac{z}{x^{\ast}} - \gamma \int \frac{\tau}{\frac{-\tau x^{\ast}}{z} + 1} \,dH(\tau),
 \end{align*}
