@@ -24,6 +24,9 @@
 \newcommand{\bZ}{\boldsymbol{Z}}
 \newcommand{\Complex}{\mathbb{C}}
 
+\newcommand{\interior}{\mathrm{int}}
+\newcommand{\range}{\mathrm{range}}
+
 \newcommand{\convweak}{\Rightarrow}
 
 \title{ {\bf The Basics of Random Matrix Theory} }
@@ -79,7 +82,9 @@ $$
 $$
 
 \subsection{Inverse of the companion Stieltjes transform}
-Finally, the inverse of the companion Stieltjes transform is denoted by $v^{-1}$, and satisfies
+\label{sec:inverse-companion-transform}
+
+Finally, the inverse of the companion Stieltjes transform $v^{-1}$ satisfies
 $$
 v_{\mu}^{-1}(v_{\mu}(z)) = z, \quad \textrm{for all}\quad z \in \mathbb{C}\setminus\supp(\mu).
 $$
@@ -109,6 +114,12 @@ Let $m_{\gamma,H}$ be the Stieltjes transform of the limiting generalized Marche
 	\label{eqn:silverstein}
 	z = -\frac{1}{v(z)} + \gamma \int \frac{t}{1 + tv(z)} \,dH(t), \quad \textrm{for all $z \in \C_{+}$.}
 \end{equation}
+Equation~\eqref{eqn:silverstein} can be manipulated to show that the inverse of the companion transform satisfies
+\begin{equation}
+\label{eqn:inverse-fixed-point}
+v_{\gamma,H}^{-1}(z) = -\frac{1}{z} + \gamma\int\frac{\tau}{1 + \tau z} \,dH(\tau). 
+\end{equation} 
+This will be useful in computing the support of $H$. 
 
 \subsection{The companion transform}
 To begin, let $\bB = \bS^{\top} = \frac{1}{n} \bX^{\top} \bX \in \Reals^{n \times n}$. We will assume without loss of generality that $\bSigma$ is diagonal with elements $\tau_1,\ldots,\tau_p$, and write $\bB = \bQ \bSigma \bQ$, where $\bQ_{ij} \sim N(0,1/n)$, all independent. 
@@ -239,7 +250,7 @@ Finally, applying the inversion formula, the density of $f_{B}(\theta)$ at any $
 $$
 f_{B}(\theta) = \frac{1}{\pi}\lim_{\varepsilon \to} \Im(m_B(\theta + \varepsilon i)) = \frac{1}{\theta} \int \frac{\tau \gamma f_{\gamma,H}(\theta)}{|1 + \tau v(\theta)|^2} \,dG(\tau),
 $$
-assuming this limit is finite. If the limit is infinite, then $\theta$ is an atom of $B$. 
+assuming this limit is finite. If the limit is infinite, then $\theta$ is a potential atom of $B$. 
 
 \section{Examples}
 
@@ -276,9 +287,66 @@ f_{\gamma}(t)
 & = \frac{1}{\pi} \Im \frac{\sqrt{( (1 + \sqrt{\gamma})^2 - t)((1 - \sqrt{\gamma})^2 - t)}}{2 \gamma t} \\
 & = \frac{1}{\pi} \frac{\sqrt{( (1 + \sqrt{\gamma})^2 - t)(t - (1 - \sqrt{\gamma})^2)}}{2 \gamma t}.
 \end{align*}
+Meanwhile,
+$$
+m_{B_{\gamma}}(\theta) = -\frac{1}{\theta(v_{\gamma}(\theta) + 1)} \textcolor{red}{= m_{\gamma}(\theta)}, 
+$$
+showing that $B_{\gamma} = F_{\gamma}$, as one would expect.
 
 \subsection{Spiked covariance, one-spike}
-The next case that will be considered is the one-spiked covariance model where $\bSigma = \ell \bbeta \bbeta^{\top} + \bI$, where $\|\bbeta\|^2 = 1$ and $\bbeta, \ell$ are fixed in $n$. As in the identity covariance model $\hat{H}_n(\tau) \to H_1(\tau)$, and so $\hat{F}_n(t) \to F_{\gamma}(t)$. However, $G_n \to \delta_{\ell + 1}$.  
+The next case that will be considered is the one-spiked covariance model where $\bSigma = (\ell - 1) \bbeta \bbeta^{\top} + \bI$ for some $\ell \geq 1$, where $\|\bbeta\|^2 = 1$ and $\bbeta, \ell$ are fixed in $n$. As in the identity covariance model $\hat{H}_n(\tau) \to H_1(\tau)$, and so $\hat{F}_n(t) \to F_{\gamma}(t)$. 
+
+Unlike in the identity covariance case, $G_n \to \delta_{\ell}$. Therefore the Stieltjes transform of the empirical spectral distribution of $\beta$ has limit
+\begin{equation}
+\label{eqn:spiked-covarinace-limiting-stieltjes}
+m_{B_{\ell}}(\theta) = -\frac{1}{\theta} \cdot \frac{1}{\ell v(\theta) + 1}. 
+\end{equation}
+Clearly $m_B(\theta) \in \Reals$ if and only if $v(\theta) \in \Reals$ and $v(\theta) \neq -(1/\ell)$. Since singletons do not contribute to the $\interior(\supp(B))$, it follows that 
+$$
+\interior(\supp(B)) = \interior(\supp(F_\gamma)) = (1 - \sqrt{\gamma}, 1 + \sqrt{\gamma}).
+$$
+For $\theta \in (1 - \sqrt{\gamma}, 1 + \sqrt{\gamma})$, the density of $B_{\ell}$ is given by the Stieljes inversion formula. We work through the tedious algebraic details for completeness. First of all, the companion transform can be written as 
+\begin{align*}
+v_{\gamma}(\theta) 
+& = \gamma m_{\gamma}(\theta) - \frac{1 - \gamma}{\theta} \\
+& = \gamma \bigg\{\frac{(1 - \gamma - \theta) + \sqrt{(1 + \gamma - \theta)^2 - 4 \gamma}}{2 \gamma \theta}\bigg\}- \frac{(1 - \gamma)}{\theta} \\
+& = -\frac{1}{2} - \frac{(1 - \gamma)}{2 \theta} + \frac{\sqrt{(1 + \gamma - \theta)^2 - 4 \gamma}}{2\theta}.
+\end{align*}
+A calculation then gives
+\begin{align*}
+|1 + \ell v(\theta)|^2 
+& = 
+\bigg|1 - \frac{\ell}{2} - \frac{(1 - \gamma)\ell}{2 \theta} + \frac{\ell\sqrt{(1 + \gamma - \theta)^2 - 4 \gamma}}{2\theta}\bigg|^2 \\
+& = 
+\bigg(1 - \frac{(1 - \gamma + \theta)\ell}{2 \theta}\bigg)^2 - \frac{\ell^2\Big((1 + \gamma - \theta)^2 - 4 \gamma\Big)}{4\theta^2} \\
+& = 
+1 - \frac{(1 - \gamma + \theta)\ell}{ \theta} + \frac{\ell^2(1 - \gamma + \theta)^2- (1 + \gamma - \theta)^2}{4\theta^2} + \frac{\ell^2\gamma}{\theta^2} \\
+& = 1 - \frac{(1 - \gamma + \theta)\ell}{ \theta} + \frac{\ell^2}{\theta}. 
+\end{align*}
+Therefore, 
+\begin{align*}
+f_{B_{\ell}}(\theta) & = \frac{1}{\theta} \frac{\ell \gamma f_{\gamma}(\theta)}{|1 + \ell v(\theta)|^2}  = \frac{\gamma \ell}{\theta + \ell(\gamma - 1 - \theta) + \ell^2} f_{\gamma}(\theta), \quad \textrm{for $\theta \in (1 - \sqrt{\gamma}, 1 + \sqrt{\gamma}).$}
+\end{align*}
+It can be shown that this holds at the boundaries $\theta = \pm(1 - \sqrt{\gamma})$ as well.
+
+Finally, it can be seen from~\eqref{eqn:spiked-covarinace-limiting-stieltjes} that there is a potential atom in $B_{\ell}$ if there exists $\theta \in \Reals_{+}$ such that $v_{\gamma}(\theta) = -1/\ell$, in other words, if $-1/\ell \in \range(v_{\gamma})$. As detailed in Section~\ref{sec:inverse-companion-transform}, the range of $v_{\gamma}$ can be identified from the inverse of the Stieltjes transform. The inverse of the Stieltjes transform is given in~\eqref{eqn:inverse-fixed-point}, and in the special case where $H = \delta_1$:
+$$
+v_{\gamma}^{-1}(z) = -\frac{1}{z} + \frac{\gamma}{1 + z}.
+$$
+It follows that
+$$
+(v_{\gamma}^{-1})'(z) = \frac{1}{z^2} - \frac{\gamma}{(1 + z)^2},
+$$
+which is strictly positive when $-1/z > (1 + \sqrt{\gamma})$. In other words, $-1/\ell \in \range(v_{\gamma})$ if $\ell > (1 + \sqrt{\gamma})$. Thus, if $\ell > (1 + \sqrt{\gamma})$, there exists an atom at 
+$$
+v_{\gamma}^{-1}(-1/\ell) = \ell + \frac{\gamma \ell}{\ell - 1} =: \theta_l,
+$$
+and the weight of the atom is given by
+\begin{align*}
+\lim_{\varepsilon \to 0} - \varepsilon i m_{B}(\theta + \varepsilon i) 
+& = \frac{-1}{\ell \theta_\ell v_{\gamma}'(\theta_l)} = \frac{(v_{\gamma}^{-1})'(-1/\ell)}{\ell \theta_{\ell}} \\
+& = \frac{\ell - 1 - \sqrt{\gamma}}{\ell - 1}.
+\end{align*}
 
 
 	
