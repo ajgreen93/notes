@@ -183,6 +183,64 @@ Doing the same to the right hand side, we see that
 \end{equation}
 Rearranging~\eqref{eqn:approximate-silverstein} gives back~\eqref{eqn:silverstein}.
 
+\section{Spectral measure of population covariance}
+Let $\bv_i$ represent the $i$th eigenvector of $\bS$. Consider the weighted spectral measure:
+$$
+\wh{Q}_n(\theta) = \frac{1}{p} \sum_{i = 1}^{p} \dotp{\bv_i}{\bSigma \bv_i} \cdot \1\{\lambda_i(\bSigma) \leq \theta\}.
+$$
+This can be thought of as the empirical spectral measure of the matrix $\bSigma$.
+We show how to build upon the results of the preceding section to establish the weak convergence of $\wh{Q}_n$ as $n \to \infty, p \to \infty, p/n \to \gamma \in (0,\infty)$. 
+
+As usual, this will be accomplished by establishing convergence of the Stieltjes transform, 
+$$
+m_{\wh{Q}_n}(\theta) = \frac{1}{p}\tr(\bSigma \bR), \quad \bR = (\bS - z \bI)^{-1},
+$$
+and then applying the inversion formula.
+
+\subsection{Convergence of the Stieltjes transform}
+The key is to analyze $\bS \bR$. First, we show that $\frac{1}{p}\tr(\bS \bR)$ can be related to the quantity of interest. Notice that $\frac{1}{p}\tr(\bS \bR)$ can be written as the following sum of quadratic forms:
+\begin{equation}
+	\label{eqn:spectral-measure-Sigma-1}
+	\frac{1}{p}\tr(\bS \bR) = \frac{1}{pn} \sum_{k = 1}^{n} \bx_k^{\top} \bR \bx_k.
+\end{equation}
+We analyze each quadratic form using leave-one-out arguments. Introduce the leave-one-out matrices
+$$
+\bS_k = \frac{1}{n} \sum_{i \neq k} \bx_i \bx_i^{\top}, \quad \bR_k = (\bS_k - z \bI)^{-1}.
+$$
+By the resolvent identity, 
+$$
+\bR_k - \bR = \bR_k(\frac{1}{n} \bx_k \bx_k^{\top}) \bR
+$$
+and thus
+$$
+\bx_k^{\top} \bR \bx_k = \frac{\bx_k^{\top} \bR_k \bx_k}{1 + (1/n)\bx_k^{\top} \bR_k \bx_k}.
+$$
+Arguing as in the preceding section, we have that $\bx_k^{\top} \bR_k \bx_k \approx \tr(\bSigma \bR_k) \approx \tr(\bSigma \bR)$. [The approximations are up to asymptotically negligible terms as $n,p \to \infty$.] Plugged back into~\eqref{eqn:spectral-measure-Sigma-1},
+$$
+\frac{1}{p}\tr(\bS \bR) \approx \frac{\tr(\bSigma \bR)}{p(1 + (1/n) \tr(\bSigma \bR))} = \frac{(1/p) \tr(\bSigma \bR)}{1 + (\gamma/p) \tr(\bSigma \bR)}.
+$$
+On the other hand, by the identity $\bS = \bS - z\bI + z \bI$, we have
+$$
+\bS \bR = \bI  + z \bR \Longrightarrow \sum_{i = 1}^{n} \bx_i \bx_i^{\top} \bR = \bI  + z \bR.
+$$ 
+Therefore, $(1/p) \tr(\bS \bR) = 1 + z/p\tr(\bR) = 1 + z m_{n}(z)$. We conclude that 
+$$
+\frac{m_{\hat{Q}_n}(z)}{1 + \gamma m_{\hat{Q}_n}(z)} \approx 1 + z m_{n}(z),
+$$ 
+where $m_n(z)$ is the Stieltjes transform of $\bS$. In the limit:
+$$
+\frac{m_{Q}(z)}{1 + \gamma m_{Q}(z)} \approx 1 + z m_{\gamma,H}(z),
+$$
+which can be rearranged to 
+$$
+m_Q(z) = -\frac{1}{\gamma}\bigg(1 + \frac{1}{z v_{\gamma,H}(z)}\bigg).
+$$
+
+
+
+
+
+
 \section{Distribution of eigenvectors}
 Define the following population and sample spectral distributions of a vector $\bbeta \in \Reals^p$:
 $$
