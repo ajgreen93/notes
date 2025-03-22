@@ -10,13 +10,16 @@
 \newcommand{\bz}{\boldsymbol{z}}
 \newcommand{\bv}{\boldsymbol{v}}
 \newcommand{\bw}{\boldsymbol{w}}
+\newcommand{\bg}{\boldsymbol{g}}
 \newcommand{\bq}{\boldsymbol{q}}
 \newcommand{\bX}{\boldsymbol{X}}
 \newcommand{\bbeta}{\boldsymbol{\beta}}
 \newcommand{\bSigma}{\boldsymbol{\Sigma}}
 \newcommand{\bTheta}{\boldsymbol{\Theta}}
 \newcommand{\bS}{\boldsymbol{S}}
+\newcommand{\bT}{\boldsymbol{T}}
 \newcommand{\bB}{\boldsymbol{B}}
+\newcommand{\bG}{\boldsymbol{G}}
 \newcommand{\bQ}{\boldsymbol{Q}}
 \newcommand{\bP}{\boldsymbol{P}}
 \newcommand{\bR}{\boldsymbol{R}}
@@ -47,6 +50,8 @@ $$
 \bS = \frac{1}{n}\sum_{i = 1}^{n} \bx_i \bx_i^{\top} = \frac{1}{n}\bX \bX^{\top},
 $$ 
 where $\bX \in \Reals^{n \times p}$ is matrix with rows $\bX_{i\cdot} = \bx_i$. Random matrix theory describes the asymptotic behavior of the sample eigenvalues $\lambda_i(\bS) = \lambda_i(\bS)$ and eigenvectors $\bv_i = \bv_i(\bS)$ of $\bS$, in the \emph{proportional asymptotics} limit $n,p \to \infty, p/n \to \gamma \in (0,\infty)$. This is achieved by through the device of the Stieltjes transform which packages the spectral information of $\bS$, and is the key analytical tool used to prove asymptotic convergence of spectral distributions of random matrices.
+
+This note analyzes the asymptotic behavior of the Stieltjes transform of $\bS$, along with associated other measures. Throughout, we will assume that the population covariance is diagonal $\bSigma = \bT = \diag(\{\tau_j\})$, to simplify the proofs. When the data are Gaussian, as assumed here, this is without loss of generality.  
 
 \subsection{Stieltjes transform}
 The {\bf Stieltjes transform} of a measure $\mu$ is defined for $z \in \mathbb{C}\setminus\supp(\mu)$ as
@@ -98,106 +103,142 @@ $$
 $$
 In fact, the two are exactly equal, and it follows that $v_{\mu}^{-1}(\mc{D}_{\mu}) = \Reals \setminus \mathrm{int}~\supp(\mu)$.
 
-
-
-
 \section{Distribution of eigenvalues}
 Let $\hat{H}_n(\tau)$ represent the empirical spectral distribution of the eigenvalues of $\bSigma$:
 $$
 \hat{H}_n(t) := \frac{1}{p} \sum_{i = 1}^{p} \1\{\lambda_i(\bSigma) \leq t\}.
 $$
-Suppose that $\hat{H}_n(t)$ converges weakly to a limiting spectral distribution $H(t)$ as $p \to \infty$. Then the spectral distribution $\hat{F}_n(t)$ of the sample covariance $\bS$ also converges to continuum limit $F_{\gamma,H}(t)$, which we will call a {\bf generalized Marchenko-Pastur distribution}. Random matrix theory provides the analytical tools necessary to prove this result and describe the resulting continuum limit. We give the result and sketch the proof.
+Suppose that $\hat{H}_n(t)$ converges weakly to a limiting spectral distribution $H(t)$ as $p \to \infty$. Then the spectral distribution $\hat{F}_n(t)$ of the sample covariance $\bS$ also converges to continuum limit $F_{\gamma,H}(t)$, which we will call a {\bf generalized Marchenko-Pastur distribution}. Random matrix theory provides the analytical tools necessary to prove this result and describe the resulting continuum limit. We give the result and describe some of the main ideas of the proof.
 
 \subsection{The fixed point equation}
 Let $m_{\gamma,H}$ be the Stieltjes transform of the limiting generalized Marchenko-Pastur distribution $F_{\gamma,H}$. The companion transform is $v_{\gamma,H} := \gamma m_{\gamma,H}(z) - \frac{(1 - \gamma)}{z}$. It can be shown, via the leave-one-out approach, that the companion transform satisfies the self-consistency equation
 \begin{equation}
 	\label{eqn:silverstein}
-	z = -\frac{1}{v(z)} + \gamma \int \frac{t}{1 + tv(z)} \,dH(t), \quad \textrm{for all $z \in \C_{+}$.}
+	z = -\frac{1}{v(z)} + \gamma \int \frac{\tau}{1 + \tau v(z)} \,dH(\tau), \quad \textrm{for all $z \in \C_{+}$.}
 \end{equation}
 Equation~\eqref{eqn:silverstein} can be manipulated to show that the inverse of the companion transform satisfies
 \begin{equation}
 \label{eqn:inverse-fixed-point}
 v_{\gamma,H}^{-1}(z) = -\frac{1}{z} + \gamma\int\frac{\tau}{1 + \tau z} \,dH(\tau). 
 \end{equation} 
-This will be useful in computing the support of $H$. 
+This will be useful in computing the support of $F_{\gamma,H}$. 
 
-\subsection{The companion transform}
-To begin, let $\bB = \bS^{\top} = \frac{1}{n} \bX^{\top} \bX \in \Reals^{n \times n}$. We will assume without loss of generality that $\bSigma$ is diagonal with elements $\tau_1,\ldots,\tau_p$, and write $\bB = \bQ \bSigma \bQ$, where $\bQ_{ij} \sim N(0,1/n)$, all independent. 
+\subsection{Atoms}
 
-The spectral distribution of $\bB$ is 
-$$
-\bar{F}_n(t) = \frac{1}{n}\sum_{i = 1}^{n} \1\{\lambda_i(\bB) \leq t\} = \gamma \hat{F}_n(t) + \max\{(1 - \gamma),0\} \1\{t \leq 0\},
-$$
-so the Stieltjes transform of $\bB$ is 
-$$
-v_n(z) = \frac{1}{n} \tr\Big((\bB - z\bI)^{-1}\Big) = \gamma m_n(z) - \frac{(1 - \gamma)}{z}.
-$$
-The transform $v_n$ is called the {\bf companion transform} of $m_n$. We will sketch an argument showing that the companion transform converges in the proportional asymptotic limit. To begin, we make the following simplifying approximations:
-\begin{align*}
-	\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)} & \approx \mathbb{E}[\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)}] \\
-	\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)} & \approx \mathbb{E}[\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}] \\
-	v_n(z) := \frac{1}{n}\tr(\bB - z \bI)^{-1} & \approx \mathbb{E} v_n(z) \\
-	\mathbb{E}{\frac{1}{n}\tr(\bB - z \bI)^{-1}} & \approx \mathbb{E}{\frac{1}{n}\tr(\bB_j - z \bI)^{-1}}.
-\end{align*}
-
-
-\subsection{The high-level argument}
-Let $\bq_{(j)} \in \Reals^{n}$ be the $j$th column of $\bQ$ and notice that 
-$$
-\bB = \sum_{j = 1}^{p} \tau_j \bq_{(j)} \bq_{(j)}^{\top}.
-$$
-The key argument involves the concentration of terms of the form $\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)}$. Via the Sherman-Morrison formula, 
-$$
-(\bB - z\bI)^{-1} 
-= (\bB_j -  z \bI + \tau_j \bq_{(j)} \bq_{(j)}^{\top})^{-1} 
-= (\bB_j - z\bI)^{-1} - \frac{\tau_j (\bB_j - z\bI)^{-1} \bq_{(j)} \bq_{(j)}^{\top} (\bB_j - z\bI)^{-1}}{1 + \tau_j \bq_{(j)}^{\top}(\bB_j - z\bI)^{-1}\bq_{(j)}}
-$$
-hence,
-\begin{align*}
-\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)} 
-& = \bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)} - \frac{\tau_j}{1 + \tau_j \bq_{(j)}^{\top}(\bB_j - z\bI)^{-1}\bq_{(j)}} (\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)})^2 \\
-& = \frac{\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}}{1 + \tau_j \bq_{(j)}^{\top}(\bB_j - z\bI)^{-1}\bq_{(j)}}.
-\end{align*}
-Since $q_{(j)}$ and $B_j$ are independent,
-$$
-\mathbb{E}[\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}|\bX_{(-j)}] =  \frac{1}{n}\tr(\bB_j - z\bI)^{-1}.
-$$
-Thus, using two of our simplifying approximations, we have that
-$$
-\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}  \approx \mathbb{E}[\bq_{(j)}^{\top} (\bB_j - z\bI)^{-1} \bq_{(j)}] = \E[\frac{1}{n}\tr(\bB_j - z\bI)^{-1}]  \approx \mathbb{E}v_n(z),
-$$
-and therefore
-$$
-\bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)} \approx \frac{\E v_n(z)}{1 + \tau_j \E v_n(z)}.
-$$
-Now, multiplying the left hand side by $\tau_j$ and averaging over $j$ gives
-$$
-\frac{1}{p}\sum_{j = 1}^{p} \tau_j \bq_{(j)}^{\top} (\bB - z\bI)^{-1} \bq_{(j)} = \frac{1}{p} \tr(\bB (\bB - z\bI)^{-1}) 
-= \frac{1}{p} \tr(\bI_n + z (\bB - z\bI)^{-1} ) = \frac{1}{\gamma} + \frac{1}{\gamma} v_n(z)
-\approx \frac{1}{\gamma} + \frac{1}{\gamma}\E v_n(z).
-$$
-Doing the same to the right hand side, we see that
+Using~\eqref{eqn:silverstein}, we can describe the behavior of $v(\eta i)$ as $\eta \to 0$. First, we rearrange~\eqref{eqn:silverstein} to
 \begin{equation}
-\label{eqn:approximate-silverstein}
-\frac{1}{\gamma} + \frac{1}{\gamma} \E v_n(z) \approx \frac{1}{\gamma} + \frac{1}{\gamma}\E v_n(z) \approx \frac{1}{p} \sum_{j = 1}^{p} \frac{\tau_j \E v_n(z)}{1 + \tau_j \E v_n(z)} \to \int \frac{\tau \E v_n(z)}{1 + \tau \E v_n(z)} \,dH(\tau).
+	\label{eqn:silverstein-2}
+	zv(z) = \gamma - 1 - \gamma \int \frac{1}{1 + \tau v(z)} \,dH(\tau).
 \end{equation}
-Rearranging~\eqref{eqn:approximate-silverstein} gives back~\eqref{eqn:silverstein}.
+Notice that if $\gamma < 1$ then the function $\tilde{v}(z) = (\gamma - 1)/z$ has range $\Complex_{+}$, and additionally, 
+$$
+\lim_{\eta \to 0} \eta i \tilde{v}(\eta i) = \gamma - 1 = \lim_{\eta \to 0} \gamma - 1 - \gamma \int \frac{1}{1 + \tau/(\eta i)} \,dH(\tau).
+$$
+It follows that $\lim_{\eta \to 0} v(\eta i) = \lim_{\eta \to 0} \tilde{v}(\eta i) = \infty$. On the other hand, if $\gamma > 1$ then we suppose $\lim_{\eta \to 0} v(\eta i) = v_0 \in \Reals$. In that case we have from~\eqref{eqn:silverstein-2} that
+\begin{equation}
+	\label{eqn:stieltjes-at-zero}
+	\frac{\gamma - 1}{\gamma} =  \int \frac{1}{1 + \tau v_0} \,dH(\tau),
+\end{equation}
+which uniquely defines $v_0 > 0$.
+
+
+\subsection{Proof of~\eqref{eqn:silverstein}}
+\label{subsec:proof-of-eqn:silverstein}
+
+The self-consistency equation~\eqref{eqn:silverstein} is proven by leave-one-out arguments. What follows is intended to highlight the key parts of the argument; proofs of concentration and verification of other necessary regularity conditions are omitted. 
+
+Begin by introducing the notation
+$$
+\bR(z) := [\bS - z \bI]^{-1}, m_n(z) := \frac{1}{p} \tr(\bR(z)),
+$$
+for the resolvent and Stieltjes transform of $\bS$, respectively. The following arguments will show that the Stieltjes transform converges as $n, p \to \infty, n/p \to \gamma \in (0,\infty)$ to a deterministic function defined in terms of a fixed point equation. Notice that by rotational invariance of the trace, we may as well assume that $\bSigma = \bT$ is a diagonal matrix, and we will do so throughout. 
+
+The diagonal elements of the resolvent can be computed by block matrix inversion. We have that 
+\begin{equation}
+	\label{eqn:leave-one-out-resolvent}
+	\bR(z)_{11} = \bigg(\bS_{11} - z - \bS_{1\cdot}^{\top} \bR(z)_{-1} \bS_{1\cdot}\bigg)^{-1},
+\end{equation}
+where $\bS_{-1} \in \Reals^{(p - 1) \times (p - 1)}$, and $\bS_{1\cdot}$ is the $1$st row of $\bS$; these can also be written as 
+$$
+\bS = \frac{1}{n} \bT^{1/2} \bG^{\top} \bG \bT^{1/2}, \quad \bS_{11} = \frac{\tau_1}{n}\|\bg_1\|^2, \quad \bS_{1\cdot} = \frac{\sqrt{\tau_1}}{n} \bg_1^{\top} \bG \bT^{1/2}.
+$$
+Plugging back into~\eqref{eqn:leave-one-out-resolvent}, we have
+\begin{equation}
+	\label{eqn:leave-one-out-resolvent-2}
+	\bR(z)_{11} = \bigg(\frac{\tau_1}{n}\|\bg_1\|^2 - z - \frac{\tau_1}{n^2} \bg_1^{\top} \bX_{-1}^{\top} \bR(z)_{-1} \bX_{-1}^{\top} \bg_1\bigg)^{-1}.
+\end{equation}
+Each of the two terms in~\eqref{eqn:leave-one-out-resolvent-2} concentrates around its expectation: as $n,p \to \infty$,
+\begin{equation}
+	\label{eqn:pf-eqn:silverstein-1}
+	\frac{\tau_1}{n}\|\bg_1\|^2 \sim \frac{\tau_1}{n}\mathbb{E}[\|\bg_1\|^2] \to \tau_1,
+\end{equation}
+while almost surely,
+\begin{align}
+	\frac{\tau_1}{n^2} \bg_1^{\top} \bX_{-1}^{\top} \bR(z)_{-1} \bX_{-1}^{\top} \bg_1 
+	& \sim \frac{\tau_1}{n^2} \mathbb{E}_{\bX_{-1}}\Big[\bg_1^{\top} \bX_{-1}^{\top} \bR(z)_{-1} \bX_{-1}^{\top} \bg_1\Big] \\
+	& = \frac{\tau_1}{n^2} \tr\Big(\bX_{-1}^{\top} \bR(z)_{-1} \bX_{-1}^{\top}\Big) \\
+	& = \frac{\tau_1}{n^2} \tr\Big(\bR(z)_{-1} \bX_{-1}^{\top} \bX_{-1} \Big) \\
+	& = \frac{\tau_1}{n} \tr\Big(\bR(z)_{-1} \bS_{-1} \Big) \\
+	& = \frac{\tau_1}{n} \tr\Big(\bI_{p - 1} + z \bR(z)_{-1} \Big) \\
+	& = \tau_1 \gamma + \tau_1 z \gamma m_{n,-1}(z) \\
+	& \sim \tau_1 \gamma + \tau_1 z \gamma m_{n}(z).
+	\label{eqn:almost-sure-convergence-diagonal-resolvent}
+\end{align}
+Here the notation $A_n \sim B_n$ means $A_n/B_n \to 1$ almost surely as $n \to \infty$. Equation~\eqref{eqn:pf-eqn:silverstein-1} and the first line of the above string of equalities follow by concentration inequalities (e.g. Hanson-Wright inequality) and suitable preliminary results implying that the Frobenius norm of $\bR$ is $\mc{O}(p)$.  The last line of the above string of equalities follows since the first diagonal entry of $\bR(z)_{-1}$ is $\mc{O}(1)$. Therefore,
+\begin{equation}
+	\label{eqn:resolvent-diagonal}
+	\bR(z)_{11} \sim \bigg(\tau_1 - z - \tau_1 \gamma(1 + z m_n(z))\bigg)^{-1}.
+\end{equation}
+
+Repeating this calculation for $\bR(z)_{jj}, j = 1,\ldots,p$, and averaging over $j$, we obtain
+\begin{equation*}
+	m_n(z) \sim \frac{1}{p} \sum_{j = 1}^{p} \frac{1}{\tau_j - z - \tau_j( \gamma + z \gamma m_n(z))} \sim \int \frac{1}{\tau(1 - \gamma) - z - \tau z \gamma m_n(z)} \,dH(\tau).
+\end{equation*}
+It follows that the limit $m(z) = \lim_{n \to \infty} m_n(z)$ satisfies
+\begin{align}
+	m(z) 
+	& = \int \frac{1}{\tau(1 - \gamma) - z - \tau z \gamma m(z)} \,dH(\tau) \\ 
+	& = -\frac{1}{z} \int \frac{1}{1 + \tau v(z)} \,dH(\tau).
+\end{align}
+Recalling that $\frac{m(z)}{\gamma} = v(z) + \frac{(1 - \gamma)}{z}$, some algebra shows that
+\begin{align*}
+	-v(z) 
+	& = -\frac{(1 - \gamma)}{z} -\frac{\gamma}{z} \int \frac{1}{1 + \tau v(z)} \,dH(\tau) \\
+	& = -\frac{1}{z} + \frac{\gamma}{z} \int \frac{\tau v(z)}{1 + \tau v(z)} \,dH(\tau).
+\end{align*}
+Rearranging terms then yields the claimed result~\eqref{eqn:silverstein}.
+
 
 \section{Spectral measure of population covariance}
+\label{sec:spectral-measure-population-covariance}
 Let $\bv_i$ represent the $i$th eigenvector of $\bS$. Consider the weighted spectral measure:
 $$
-\wh{Q}_n(\theta) = \frac{1}{p} \sum_{i = 1}^{p} \dotp{\bv_i}{\bSigma \bv_i} \cdot \1\{\lambda_i(\bSigma) \leq \theta\}.
+\wh{Q}_n(\theta) = \frac{1}{p} \sum_{i = 1}^{p} \dotp{\bv_i}{\bSigma \bv_i} \cdot \1\{\lambda_i(\bS) \leq \theta\}.
 $$
 This can be thought of as the empirical spectral measure of the matrix $\bSigma$.
 We show how to build upon the results of the preceding section to establish the weak convergence of $\wh{Q}_n$ as $n \to \infty, p \to \infty, p/n \to \gamma \in (0,\infty)$. 
 
 As usual, this will be accomplished by establishing convergence of the Stieltjes transform, 
-$$
-m_{\wh{Q}_n}(\theta) = \frac{1}{p}\tr(\bSigma \bR), \quad \bR = (\bS - z \bI)^{-1},
-$$
+\begin{equation}
+	\label{eqn:esd-of-covariance}
+	m_{\wh{Q}_n}(z) = \frac{1}{p}\tr(\bSigma \bR(z)), \quad \bR = [\bS - z \bI]^{-1},
+\end{equation}
 and then applying the inversion formula.
 
-\subsection{Convergence of the Stieltjes transform}
+\subsection{Convergence of the Stieltjes transform~\eqref{eqn:esd-of-covariance}}
+We will assume without loss of generality that $\bSigma = \bT$ is diagonal, so
+$$
+m_{\wh{Q}_n}(z) = \frac{1}{p} \sum_{i = 1}^{p} \tau_j \bR(z)_{jj}.
+$$
+Equation \eqref{eqn:almost-sure-convergence-diagonal-resolvent} in the previous section shows that the diagonal elements of the resolvent converge almost surely. It follows that $m_{\wh{Q}_n}(z)$ also converges almost surely, with limit
+\begin{align*}
+m_{\wh{Q}_n}(z) 
+& \to \int \frac{\tau}{\tau(1 - \gamma) - z - \tau z \gamma m(z)} \,dH(\tau) \\
+& = -\frac{1}{\gamma z}\Big(z + \frac{1}{v(z)}\Big) \tag{by~\eqref{eqn:silverstein}}\\
+& = -\frac{1}{\gamma}\Big(1 + \frac{1}{zv(z)}\Big).
+\end{align*}
+
+\iffalse
 The key is to analyze $\bS \bR$. First, we show that $\frac{1}{p}\tr(\bS \bR)$ can be related to the quantity of interest. Notice that $\frac{1}{p}\tr(\bS \bR)$ can be written as the following sum of quadratic forms:
 \begin{equation}
 	\label{eqn:spectral-measure-Sigma-1}
@@ -233,82 +274,164 @@ $$
 $$
 which can be rearranged to 
 $$
-m_Q(z) = -\frac{1}{\gamma}\bigg(1 + \frac{1}{z v_{\gamma,H}(z)}\bigg).
+m_{Q}(z) = -\frac{1}{\gamma}\bigg(1 + \frac{1}{z v_{\gamma,H}(z)}\bigg).
 $$
+\fi
 
+\subsection{Spectral measure of $\bSigma$}
+Having established convergence of the Stieltjes transform, we now invert the Stieltjes transform to recover the limiting measure $Q = Q_{\gamma,H}$. A calculation shows that that the support of $Q$ is equal to the support of $F$. At $\theta \in \supp(F), \theta > 0$, we have that $Q$ is continuous with density
+\begin{equation}
+	\label{eqn:spectral-measure-covariance-density}
+	q(\theta) = \frac{f_{\gamma,H}(\theta)}{\theta |v_{\gamma,H}(z)|^2}.
+\end{equation}
+The measure also has an atom at $\theta = 0$ of weight
+\begin{equation}
+	\label{eqn:spectral-measure-covariance-atom-at-zero}
+	Q_{\gamma,H}(0) = - \lim_{\eta \to 0} \eta i m_Q(\eta i) = 
+	\begin{dcases*}
+		0, & \quad \textrm{$\gamma < 1 - H(0)$}, \\
+		\frac{1}{\gamma v_0}, & \quad \textrm{$\gamma > 1 - H(0)$}.
+	\end{dcases*} 
+\end{equation}
+where $v_0$ is defined in~\eqref{eqn:stieltjes-at-zero}.
 
-
-
-
-
-\section{Distribution of eigenvectors}
+\section{Spectral measure of eigenvectors}
 Define the following population and sample spectral distributions of a vector $\bbeta \in \Reals^p$:
 $$
 \wh{G}_n(\tau) := \frac{1}{\|\bbeta\|^2} \sum_{j = 1}^{p} (\bbeta_j^{\top} \bw_j)^2 \1\{\lambda_i(\bSigma) \leq \tau\}, \quad \wh{B}_n(\tau) := \frac{1}{\|\bbeta\|^2} \sum_{j = 1}^{p} (\bbeta_j^{\top} \bv_j)^2 \1\{\lambda_i(\bS) \leq \tau\}
 $$ 
 Obviously, taking $\bbeta = \bw$ means that $\wh{B}_n$ describes the correlation between the leading eigenspaces $\mathrm{span}\{\bv_1,\ldots,\bv_j\}$ and a true eigenvector of $\bSigma$. (Although, notice that the limit of $\wh{B}_n$ does not contain enough microscopic information to describe the asymptotic correlation between a population eigenvector and an individual sample eigenvector.)
 
-The limit of $\wh{B}_n$, as $n,p \to \infty, p/n \to \gamma \in (0,\infty)$ and $\hat{G}_n \convweak G$, can be computed by finding the limit of the Stieltjes transform of $\hat{B}_n$ and applying the Stieltjes inversion formula. The fundamental ideas used to derive the limit of the Stieltjes transform of $m_{\wh{B}_n}$ are largely the same as for eigenvalues, but the calculations are a bit more tedious. 
-
-\subsection{The high-level argument}
-Introduce the resolvent notation 
-$$
-\bB = \frac{1}{n} \bSigma^{1/2} \bZ \bZ^{\top} \bSigma^{1/2}, \quad \bQ = (\bB - z\bI)^{-1}, \quad \bP = \bP(\hat{e}) = (x(\hat{e})\bSigma - z\bI)^{-1},
-$$
-where $\hat{e} = \frac{1}{p}\tr(\bSigma \bQ)$, and $x(\hat{e}) = \frac{1}{1 + \gamma \hat{e}}$. (Notice that the notation has shifted from last section.) The idea is to show that for a relatively general class of matrices $\bTheta$,
+The limit of $\wh{B}_n$, as $n,p \to \infty, p/n \to \gamma \in (0,\infty)$ and $\hat{G}_n \convweak G$, can be computed by finding the limit of the Stieltjes transform of $\hat{B}_n$, 
 \begin{equation}
-	\label{eqn:matrix-resolvent-convergence}
-	\frac{1}{n}\tr(\bTheta \bQ- \bTheta \bP) \to 0.
+	\label{eqn:spectral-density-stieltjes}
+	m_{\hat{B}_n}(\tau) = \frac{1}{\|\bbeta\|^2} \dotp{\bbeta}{\bR(z) \bbeta},
 \end{equation}
-This is accomplished by leave-one-out arguments. By the resolvent identity,
-$$
-\bP - \bQ = \bP (\bQ^{-1} - \bP^{-1}) \bQ = \bP (\bB - x(\hat{e})\bSigma) \bQ. 
-$$
-Writing $\bB = \frac{1}{n}\sum_{i = 1}^{n} \bSigma^{1/2} \bz_i \bz_i^{\top} \bSigma^{1/2}$, we have from Sherman-Morrison that
-\begin{align*}
-\bB \bQ 
-& = \frac{1}{n}\sum_{i = 1}^{n} \bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2}  \bQ \\
-& = \frac{1}{n}\sum_{i = 1}^{n} \bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2}  \Big(\bQ_i - \frac{\bQ_i \bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2} \bQ_i}{1 + \bz_i^{\top} \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i}\Big) \\
-& = \frac{1}{n}\sum_{i = 1}^{n} \bSigma^{1/2} \bz_i  \Big(1 - \frac{\bz_i^{\top}  \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i }{1 + \bz_i^{\top} \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i}\Big) \bz_i^{\top}  \bSigma^{1/2} \bQ_i \\
-& = \frac{1}{n}\sum_{i = 1}^{n} \frac{\bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2} \bQ_i}{{1 + \bz_i^{\top} \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i}}.
-\end{align*}
-Now, assuming as before that differences between empirical means and expectations are negligible, so that we can move between them as needed, we have that
-\begin{align*}
-\tr(\wt{\bTheta} \bSigma^{1/2} \bz_i \bz_i^{\top}  \bSigma^{1/2} \bQ_i) & \approx \frac{1}{n}\tr(\wt{\bTheta} \bSigma \bQ) \\
-\bz_i^{\top} \bSigma^{1/2} \bQ_i \bSigma^{1/2} \bz_i & \approx \frac{1}{n}\tr(\bSigma \bQ) = \gamma \hat{e}.
-\end{align*}
-Thus 
-$$
-\tr(\wt{\bTheta} \bB \bQ) \approx \frac{\tr(\wt{\bTheta} \bSigma \bQ)}{1 + \gamma \hat{e}} =  x(\hat{e}) \tr(\wt{\bTheta} \bSigma \bQ),
-$$
-establishing~\eqref{eqn:matrix-resolvent-convergence} upon taking $\wt{\bTheta} = \bTheta \bP$. 
+and applying the Stieltjes inversion formula. % The fundamental ideas used to derive the limit of the Stieltjes transform of $m_{\wh{B}_n}$ are largely the same as for eigenvalues, but the calculations are a bit more tedious. 
 
-One more empirical object $\hat{e}$ remains, but the preceding arguments show what its limit should be. In particular, taking $\bTheta = \bSigma$, we conclude that
-$$
-f_n(\hat{e}) := \frac{\hat{e}}{\gamma} - \frac{1}{n}\tr\big(\bSigma \bP(\hat{e})\big) \to 0.
-$$
-Letting $e_n^{\ast}$ be such that $f_n(e_n^{\ast}) = 0$, it can be shown that $f_n(\hat{e}) \to 0$ implies $\hat{e} \to e_n^{\ast}$, and thus
-\begin{equation}
-	\frac{1}{n}\tr(\bTheta \bQ) - \frac{1}{n}\tr(\bTheta \bP(e_n^{\ast})) \to 0.
-\end{equation}
-Taking the limit of $\frac{1}{n}\tr(\bTheta \bP(e_n^{\ast}))$, we arrive at the following:
-$$
-m_{\hat{B}_n}(z) \to \int \frac{1}{\tau x(e^{\ast}) - z} \,dG(\tau), \quad \textrm{where} \quad e^{\ast} = \int \frac{\tau}{\tau x(e^{\ast}) - z} \,dH(\tau).
-$$
-Finally, manipulating the above self-consistency equation for $e^{\ast}$ gives that $x^{\ast} = x(e^{\ast}) = -z v(z)$, since
+\subsection{Convergence of the Stieltjes transform~\eqref{eqn:spectral-density-stieltjes}}
+\label{subsec:convergence-of-eqn:spectral-density-stieltjes}
+As in Section~\ref{subsec:proof-of-eqn:silverstein}, we do not provide a rigorous proof. Instead we only show convergence of expectation $\E m_{\hat{B}_n}(\tau) \to m_{B}(\tau)$, under the assumption that $m_{\hat{B}_n}(\tau)$ and the diagonal resolvent terms $\bR(z)_{jj}$ concentrate around their expectations.
+
+We divide the expectation of interest into two terms, the on-diagonal and off-diagonal terms:
+\begin{equation*}
+	m_{\hat{B}_n}(z) = \frac{1}{p} \sum_{j = 1}^{p} \bbeta_j^2 [\bR(z)]_{jj} + \frac{1}{p} \sum_{i \neq j}^{p} \bbeta_i \bbeta_j [\bR(z)]_{ij}.
+\end{equation*}
+We have already computed the almost sure limit of the on-diagonal term in~\eqref{eqn:resolvent-diagonal}; by assumption, this also represents the limit of the expectation of the on-diagonal term. For the off-diagonal terms, by block-matrix inversion,
 \begin{align*}
-	\frac{1}{x^{\ast}} - 1 = \gamma \int \frac{\tau}{\tau x^{\ast} - z} \,dH(\tau) \Longleftrightarrow z = \frac{z}{x^{\ast}} - \gamma \int \frac{\tau}{\frac{-\tau x^{\ast}}{z} + 1} \,dH(\tau),
+	[\bR(z)]_{1\cdot} 
+	& = -[\bR(z)]_{11} \bS_{1\cdot} \bR_{-1}(z)  = -[\bR(z)]_{11} \frac{\bX_{\cdot 1}^{\top} \bX_{\cdot -1}}{n} \bR_{-1}(z). 
 \end{align*}
-showing that $-x^{\ast}/z$ solves the self-consistency equation~\eqref{eqn:silverstein}. Thus, 
-$$
-m_{\hat{B}_n}(z) \to \int \frac{1}{-z \tau v(z) - z} \,dG(\tau) = -\frac{1}{z} \int \frac{1}{\tau v(z) + 1} \,dG(\tau) = m_{B}(z).
-$$
-\subsection{The inversion formula}
-Finally, applying the inversion formula, the density of $f_{B}(\theta)$ at any $\theta \in \supp(B)$ is given by
+As $\bSigma$ is diagonal this last term has expectation $0$, conditional on $\bX_{\cdot -1}$ and therefore marginally: that is
+\begin{equation}
+	\label{eqn:off-diagonal-resolvent}
+	\mathbb{E}[\bR(z)_{ij}|\bX_{\cdot-i}] = 0, \quad \textrm{for all $i \neq j$.}
+\end{equation}
+Thus the expectation of the off-diagonal term is $0$, and
+\begin{equation*}
+	\E m_{\hat{B}_n}(z) \sim \frac{1}{p}\sum_{j = 1}^{p} \bbeta_j^2 [\bR(z)]_{jj} \to \int \frac{1}{\tau - z - \gamma \tau(1 + z m(z))} \,dG(\tau) = -\frac{1}{z}\int\frac{1}{\tau v(z) + 1} \,dG(\tau).
+\end{equation*}
+It is indeed the case that $m_{\hat{B}_n}(z)$ converges almost surely as $n,p \to \infty, n/p \to \gamma \in (0,\infty)$, with limit
+\begin{equation}
+	\label{eqn:stieljtes-limiting-spectral-density}
+	m_{B}(z) = -\frac{1}{z}\int\frac{1}{\tau v(z) + 1} \,dG(\tau).
+\end{equation}
+
+\subsection{Spectral density of $\bbeta$}
+Finally, applying the inversion formula to the limiting Stieltjes transform as given in~\eqref{eqn:stieljtes-limiting-spectral-density}, the density of $f_{B}(\theta)$ at any $\theta \in \supp(B)$ is given by
 $$
 f_{B}(\theta) = \frac{1}{\pi}\lim_{\varepsilon \to} \Im(m_B(\theta + \varepsilon i)) = \frac{1}{\theta} \int \frac{\tau \gamma f_{\gamma,H}(\theta)}{|1 + \tau v(\theta)|^2} \,dG(\tau),
 $$
 assuming this limit is finite. If the limit is infinite, then $\theta$ is a potential atom of $B$. 
+
+Suppose $\bbeta$ is the $\alpha p$th eigenvector of $\bSigma$. Then as $p \to \infty$, $\hat{G}_n(\tau) \to \delta_{Q_{\alpha}}$, where $Q_{\alpha,\gamma,H}$ is the $(1 - \alpha)$th quantile of $F_{\gamma,H}$. We compute the empirical spectral density of a population eigenvector as
+$$
+f_{B}(\theta) = \frac{1}{\theta} \frac{Q_{\alpha,\gamma,H} \gamma f_{\gamma,H}(\theta)}{|1 + Q_{\alpha,\gamma,H} v(\theta)|^2},
+$$
+assuming again that this is finite.
+
+\section{Bias of Principal Component Regression}
+Introduce the two-dimensional measure,
+\begin{equation}
+	\label{eqn:}
+	K_n(\theta,\varphi) := \frac{1}{\|\bbeta\|^2} \sum_{i,j = 1}^{p} \dotp{\bbeta}{\bv_i} \dotp{\bbeta}{\bv_j} \dotp{\bv_i}{\bSigma \bv_{j}} \1(\lambda_i(\bS) \leq \theta, \lambda_j(\bS) \leq \varphi).
+\end{equation}
+Evaluated on its diagonal $K_n(\theta,\theta)$, the measure corresponds to the out-of-sample prediction bias of Principal Component Regression. We compute limit of $K_n(\theta,\varphi)$ by calculating the limit of its Stieltjes transform -- the multi-resolvent trace
+\begin{equation}
+	\label{eqn:2d-stieltjes-transform}
+	m_{K_n}(z,w) := \frac{1}{\|\bbeta\|^2} \dotp{\bbeta}{\bR(z) \bSigma \bR(z') \bbeta},
+\end{equation}
+and applying a suitable inversion formula.
+
+\subsection{Convergence of the two-dimensional Stieltjes transform~\eqref{eqn:2d-stieltjes-transform}}
+As in Sections~\ref{subsec:proof-of-eqn:silverstein} and~\ref{subsec:convergence-of-eqn:spectral-density-stieltjes}, we will only compute the expectation, and not formally prove concentration of the functional~\eqref{eqn:2d-stieltjes-transform} about its expectation.
+
+Begin by writing $m_{K_n}(z,w)$ as a iterated sum, and strategically grouping terms:
+\begin{align*}
+	m_{K_n}(z,w) 
+	& = \frac{1}{\|\bbeta\|^2}\sum_{i,j = 1}^{p} \bbeta_i \bbeta_j (\bR(z) \bSigma \bR(w))_{ij} \\
+	& = \frac{1}{\|\bbeta\|^2}\sum_{i,j,k,l = 1}^{p} \bbeta_i \bbeta_j \bR(z)_{il} \bR(z)_{kl} \bSigma_{kl} \\
+	& = \frac{1}{\|\bbeta\|^2}\sum_{i,j = 1}^{p} \bbeta_i \bbeta_j \bigg(\sum_{k = 1}^{p} \tau_k \bR(z)_{ik} \bR(z)_{kj}\bigg) \\
+	& = \frac{1}{\|\bbeta\|^2}\sum_{j = 1}^{p} \tau_j \bbeta_j^2 \Big(\bR(z)_{jj} \bR(w)_{jj} \Big) + \frac{1}{\|\bbeta\|^2} \sum_{j = 1}^{p} \bbeta_i^2 \Big(\sum_{k \neq i}^{p} \tau_k \bR(z)_{ik} \bR(w)_{ki}\Big) + \frac{1}{\|\bbeta\|^2} \sum_{i \neq j}^{p} \bbeta_i \bbeta_j \Big(\sum_{k = 1}^{p} \bR(z)_{ik} \bR(z)_{kj}\Big) \\
+	& =: A_1 + A_2 + A_3.
+\end{align*}
+We will separately compute the expectation of each term. 
+
+For Term 1, we have from~\eqref{eqn:almost-sure-convergence-diagonal-resolvent} that the diagonal terms of the resolvent concentrate almost surely:
+$$
+\bR(z)_{ii} \to \bigg(\tau_i - z + \tau_i \gamma(1 + z \gamma m(z))\bigg)^{-1} = \frac{-1}{z(1 + \tau_i v(z))}.
+$$
+Therefore
+$$
+\mathbb{E}[A_1] \to \frac{1}{zw} \int \frac{\tau}{(1 + \tau v(z))(1 + \tau v(w))} \,dG(\tau).
+$$
+The expectation of Term 3 is zero: by~\eqref{eqn:off-diagonal-resolvent},
+\begin{equation*}
+	\mathbb{E}[A_3] = \frac{1}{\|\bbeta\|^2} \sum_{i \neq j}^{p} \bbeta_i \bbeta_j \Big(\sum_{k \neq i}^{p} \mathbb{E}\Big[\mathbb{E}[\bR(z)_{ik}|\bX_{-i}] \bR(z)_{kj}\Big] + \mathbb{E}\Big[\mathbb{E}[\bR(z)_{jk}|\bX_{-j}] \bR(z)_{ii}\Big]\Big) = 0.
+\end{equation*}
+This leaves us with Term 2. We can express the inner sum as 
+\begin{equation}
+	\label{eqn:pf-2d-Stieltjes-transform-1}
+	\sum_{k \neq i}^{p} \tau_k \bR(z)_{ik} \bR(w)_{ki} = \frac{1}{n^2}[\bR(z)]_{ii} [\bR(w)]_{ii} \bX_{\cdot i}^{\top} \bX_{\cdot -i} \bR_{-i}(z) \bSigma \bR_{-i}(w) \bX_{-i \cdot} \bX_{\cdot i}^{\top}.
+\end{equation}
+Focusing on the second part of this expression, we have that conditional on $\bX_{-i}$,
+\begin{align}
+	\label{eqn:pf-2d-Stieltjes-transform-2}
+	\frac{1}{n^2}\mathbb{E}[\bX_{\cdot i}^{\top} \bX_{\cdot -i} \bR_{-i}(z) \bSigma \bR_{-i}(w) \bX_{-i \cdot} \bX_{\cdot i}^{\top}|\bX_{-i}] 
+	& = \frac{\tau_i}{n^2} \tr\bigg(\bX_{\cdot -i} \bR_{-i}(z) \bSigma \bR_{-i}(w) \bX_{-i \cdot}\bigg) \nonumber \\
+	& = \frac{\tau_i}{n} \tr\bigg(\bS_{-i} \bR_{-i}(z) \bSigma \bR_{-i}(w)\bigg) \nonumber \\
+	& = \frac{\tau_i}{n}\bigg\{\tr\big(\bSigma \bR_{-i}(w)\big) + z \tr\big(\bR_{-i}(z) \bSigma \bR_{-i}(w) \big)\bigg\}.
+\end{align}
+We have already computed the almost sure limit of $\frac{1}{n}\tr\big(\bSigma \bR_{-i}(w)\big)$ in Section~\ref{sec:spectral-measure-population-covariance}, where we showed that 
+\begin{equation*}
+	\frac{1}{n}\tr\big(\bSigma \bR_{-i}(w)\big) \to -\Big(1 + \frac{1}{wv(w)}\Big).
+\end{equation*}
+On the other hand, for the second part of~\eqref{eqn:pf-2d-Stieltjes-transform-2}, we have that for all $z \neq w$,
+\begin{align*}
+	\frac{1}{n}\tr\big(\bR_{-i}(z) \bSigma \bR_{-i}(w) \big) 
+	& = 
+	\frac{1}{n}\tr\big(\bR_{-i}(w) \bR_{-i}(z) \bSigma \big) \\
+	& = 
+	\frac{1}{n(z - w)}\tr\big((\bR_{-i}(z)  - \bR_{-i}(w)) \bSigma \big) \\
+	& \to -\frac{1}{(z - w)}\Big(\frac{1}{zv(z)} - \frac{1}{wv(w)}\Big).
+\end{align*}
+Summing these two terms together, some routine algebra shows that the almost sure limit of~\eqref{eqn:pf-2d-Stieltjes-transform-2} is
+\begin{equation*}
+	-\tau_i \Big\{1 + \frac{K(z,w)}{v(z)v(w)}\Big\}, \quad \textrm{where}\quad K(z,w) := \frac{v(z) - v(w)}{z - w}, \textrm{for all $z \neq w$.}
+\end{equation*}
+Plugging this back into~\eqref{eqn:pf-2d-Stieltjes-transform-1} gives that the almost sure limit of~\eqref{eqn:pf-2d-Stieltjes-transform-1} is
+\begin{equation*}
+	-\frac{\tau_i}{zw(1 + \tau_i v(z)) (1 + \tau_i v(w))} \Big\{1 + \frac{K(z,w)}{v(z)v(w)}\Big\}.
+\end{equation*}
+Finally, summing over all $i = 1,\ldots,p$ gives the asymptotic limit of $\mathbb{E}[A_2]$:
+\begin{equation*}
+	\mathbb{E}[A_2] \to -\frac{1}{zw}\Big\{1 + \frac{K(z,w)}{v(z)v(w)}\Big\}\int \frac{\tau}{(1 + \tau v(z)) (1 + \tau v(w))} \,dG(\tau).
+\end{equation*}
+Adding this to $\mathbb{E}[A_1]$ and $\mathbb{E}[A_3]$ (the last being $0$), we conclude that 
+\begin{equation*}
+	\E[m_{K_n}(z,w)] \to -\frac{K(z,w)}{v(z) v(w)} \int \frac{\tau}{(1 + \tau v(z)) (1 + \tau v(w))} \,dG(\tau).
+\end{equation*}
+This is indeed the Stieltjes transform $m_{K}(z,w)$ of the limiting measure $K$ of $K_n$.
 
 \section{Examples}
 

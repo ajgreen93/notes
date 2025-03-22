@@ -1,0 +1,102 @@
+\documentclass{article}
+
+\input{../preamble.sty}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{diagbox}
+\usepackage{xr-hyper}
+
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\bz}{\boldsymbol{z}}
+\newcommand{\bv}{\boldsymbol{v}}
+\newcommand{\bw}{\boldsymbol{w}}
+\newcommand{\bg}{\boldsymbol{g}}
+\newcommand{\bq}{\boldsymbol{q}}
+\newcommand{\bX}{\boldsymbol{X}}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
+\newcommand{\bSigma}{\boldsymbol{\Sigma}}
+\newcommand{\bTheta}{\boldsymbol{\Theta}}
+\newcommand{\bS}{\boldsymbol{S}}
+\newcommand{\bT}{\boldsymbol{T}}
+\newcommand{\bB}{\boldsymbol{B}}
+\newcommand{\bG}{\boldsymbol{G}}
+\newcommand{\bQ}{\boldsymbol{Q}}
+\newcommand{\bP}{\boldsymbol{P}}
+\newcommand{\bR}{\boldsymbol{R}}
+\newcommand{\bI}{\boldsymbol{I}}
+\newcommand{\bZ}{\boldsymbol{Z}}
+\newcommand{\Complex}{\mathbb{C}}
+
+\newcommand{\interior}{\mathrm{int}}
+\newcommand{\range}{\mathrm{range}}
+
+\newcommand{\convweak}{\Rightarrow}
+
+\title{ {\bf Analysis of ridge using basic inequality} }
+
+\begin{document}
+	
+	\maketitle
+	\RaggedRight
+	We have fixed design $X \in \R^{n \times p}$, and response $y \sim N_n(X\beta^{\ast}, \sigma^2 I)$; we'll let $\sigma^2 = 1$ for convenience. We assume $n > p$, that $X$ is full rank, and that $\frac{1}{n} X^{\top} X$ is within a multiplicative factor of the identity:
+	$$
+	\|\frac{1}{n} X^{\top} X\|_{\mathrm{op}}, \|(\frac{1}{n} X^{\top} X)^{-1}\|_{\mathrm{op}} \leq C,
+	$$
+	where here and throughout $C$ is a universal constant that can change from line to line. This means that $\|Xb\|_2 \leq C \sqrt{n} \|b\|_2$ and likewise $\|b\|_2 \leq C/\sqrt{n} \|Xb\|_2$, and this fact will be used implicitly. 
+	
+	We assume $\|\beta^{\ast}\|_2 \leq b$ and estimate $\beta^{\ast}$ via ridge regression:
+	$$
+	\hat{\beta} = \argmin \|y - X\beta\|_2^2 + \lambda \|\beta\|_2^2.
+	$$
+	We are thinking of $b = O(1)$, in which case ridge may not offer much improvement over OLS, at least at the level of rates. Certainly, we will want results that apply to the case $\lambda = 0$.
+	
+	We are interested in the excess risk of $\hat{\beta}$: for $\tilde{y} \sim N_n(X\beta^{\ast}, \sigma^2 I)$ independent of $y$:
+	$$
+	\frac{1}{n}\E\Big[\|\tilde{y} - X\hat{\beta}\|_2^2 - \|\tilde{y} - X\beta^{\ast}\|_2^2\Big] = \frac{1}{n} \E\|X(\hat{\beta} - \beta^{\ast})\|_2^2.
+	$$
+	To get a bound on the error term here, we first apply a basic inequality for penalized estimators:
+	$$
+	\|y - X\hat{\beta}\|_2^2 + \lambda \|\hat{\beta}\|_2^2 \leq \|y - X\beta^{\ast}\|_2^2 + \lambda \|\beta^{\ast}\|_2^2,
+	$$
+	and therefore
+	\begin{align*}
+	\|X(\hat{\beta} - \beta^{\ast})\|_2^2 
+	& \leq 2 \langle \hat{\beta} - \beta^{\ast}, X^{\top}\epsilon \rangle + \lambda(\|\beta^{\ast}\|_2^2 - \|\hat{\beta}\|_2^2) \\
+	& \leq 2 \|\hat{\beta} - \beta^{\ast}\|_2 \cdot \sup_{\beta \in B_d(1)}\langle \beta, X^{\top}\epsilon \rangle + \lambda(\|\beta^{\ast}\|_2^2 - \|\hat{\beta}\|_2^2) \\
+	& \leq 2 \|\hat{\beta} - \beta^{\ast}\|_2 \cdot \sup_{\beta \in B_d(1)}\langle \beta, X^{\top}\epsilon \rangle +  2 \lambda b \|\hat{\beta} - \beta^{\ast}\|_2.
+	\end{align*}
+	The second inequality above is obvious, the final inequality follows since either $\|\hat{\beta}\|^2 \geq b$ and therefore the second term is non-positive, or $\|\hat{\beta}\|^2 \leq b$ and then
+	$$
+	\|\beta^{\ast}\|_2^2 - \|\hat{\beta}\|_2^2 = \dotp{\beta^{\ast} + \hat{\beta}}{\beta^{\ast} - \hat{\beta}} \leq \|\beta^{\ast} + \hat{\beta}\|_2 \|\beta^{\ast} - \hat{\beta}\|_2  \leq  2b \|\beta^{\ast} - \hat{\beta}\|_2.
+	$$
+	For the Gaussian complexity term, we use the fact that $B_d(1)$ can be covered by $O((1/\delta)^d)$ balls of radius $\delta$. Let $\mc{C}$ denote such a covering. Of course, for each $\beta \in B_d(1)$, $\beta^{\top} X^{\top} \epsilon \sim N(0, \|X\beta\|_2^2)$ and therefore
+	$$
+	\P(\beta^{\top} X^{\top} \epsilon  \geq \phi ) \leq C \exp(-c \phi^2/n),
+	$$
+	for some universal constants $C$ and $c$. Therefore,
+	$$
+	\sup_{\beta \in B_d(1)} \dotp{\beta}{X^{\top} \epsilon} \leq \sup_{\beta \in \mc{C}} \dotp{\beta}{X^{\top} \epsilon} + \sup_{\beta \in B_d(1)} \inf_{\beta' \in \mc{C}} \|X(\beta - \beta')\|_2 \|\epsilon\|_2 \leq C\Big(n \delta + \phi\Big),
+	$$ 
+	with probability at least $1 - \delta^{-d} \exp(-c \phi^2/n)$.
+	Taking $\delta = \sqrt{d/n}$ and $\phi = 2/c\sqrt{n \log(1/\delta)} = C\sqrt{n d \log n}$, we have that 
+	$$
+	\sup_{\beta \in B_d(1)} \dotp{\beta}{X^{\top} \epsilon} \leq C \sqrt{n d \log n},
+	$$
+	with probability at least $1 - Cn^{-2}$. Note: the $\sqrt{\log n}$ factor is loose and can be removed by tighter analysis, as described e.g. in Example 5.23 of the Wainwright textbook.
+	
+	As a result, for any $\lambda \leq \sqrt{n}$,
+	\begin{align*}
+	\|X(\hat{\beta} - \beta^{\ast})\|_2^2  
+	& \leq C \|\hat{\beta} - \beta^{\ast}\|_2 \sqrt{n d \log n} + 2 \lambda b \|\hat{\beta} - \beta^{\ast}\|_2 \\
+	& \leq C\|X(\hat{\beta} - \beta^{\ast})\|_2 \sqrt{d \log n} + 2 b \|X(\hat{\beta} - \beta^{\ast})\|_2.
+	\end{align*}
+	Rearranging terms gives
+	\begin{equation*}
+		\|X(\hat{\beta} - \beta^{\ast})\|_2 \leq C\Big(\sqrt{d \log n} + 2 b\Big),
+	\end{equation*}
+	and therefore,
+	\begin{equation*}
+		\frac{1}{n} \|X(\hat{\beta} - \beta^{\ast})\|_2^2 \leq \frac{C}{n}\Big(d \log n + 2 b^2\Big),
+	\end{equation*}
+	with probability $1 - C n^{-2}$. This recovers the right dependence on $d,n$, up to the loose factor of $\log n$ mentioned before. 
+\end{document}

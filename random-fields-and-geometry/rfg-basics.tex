@@ -1,0 +1,170 @@
+\documentclass{article}
+
+\input{preamble.sty}
+\usepackage{lmodern}
+
+\newcommand{\ag}[1]{{\bf{{\red{[{AG: #1}]}}}}}
+\newcommand{\InnerProduct}[2]{\langle #1,#2 \rangle}
+\newcommand{\Norm}[1]{\|#1\|}
+\newcommand{\bP}{\mathbb{P}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\V}{\mathbb{V}}
+\newcommand{\br}{{\bf r}}
+\newcommand{\bs}{{\bf s}}
+\newcommand{\bt}{{\boldsymbol t}}
+\newcommand{\bH}{{\boldsymbol H}}
+\newcommand{\Newton}{\mathrm{Newton}}
+\newcommand{\DummyField}{{\tt f}}
+\newcommand{\DummyGradient}{{\bf g}}
+\newcommand{\InformationMatrix}{{\boldsymbol J}}
+\newcommand{\lin}{\mathrm{lin}}
+\newcommand{\ind}{\perp\!\!\!\!\perp} 
+\newcommand{\Exp}{\mathrm{Exp}}
+
+\newcommand{\RandomField}{Y}
+\newcommand{\bLambda}{{\boldsymbol \Lambda}}
+\newcommand{\bGamma}{{\boldsymbol \Gamma}}
+\newcommand{\Err}{\mathrm{Err}}
+\newcommand{\bQ}{{\boldsymbol Q}}
+\newcommand{\bJ}{{\boldsymbol J}}
+\newcommand{\bV}{{\boldsymbol V}}
+\newcommand{\bI}{{\boldsymbol I}}
+\newcommand{\bC}{{\boldsymbol C}}
+\newcommand{\convweak}{\overset{d}{\to}}
+
+\newcommand{\appropto}{\mathrel{\vcenter{
+			\offinterlineskip\halign{\hfil$##$\cr
+				\propto\cr\noalign{\kern2pt}\sim\cr\noalign{\kern-2pt}}}}}
+
+\renewcommand{\thealgorithm}{\arabic{algorithm}}
+
+\title{ {\bf Notes on Random Fields and Geometry} }
+
+\begin{document}
+	
+	\maketitle
+	\RaggedRight
+	
+	Consider a generic signal-plus-noise random field
+	\begin{equation}
+		\label{eqn:signal-plus-noise}
+		Y_t = \mu_t + \epsilon_t, \quad {\rm for} ~ t \in \mc{T},
+	\end{equation}
+	where $\mc{T}$ is a manifold, possibly with boundary. Our ultimate interest is in understanding the distribution of critical points of $Y$, possibly under side conditions (e.g. local maxima, global maxima, etc.) An important formula for doing so is the Kac-Rice formula. These notes explain the Kac-Rice theorem for manifolds, and provide some examples of random fields to which it applies. In order to get to this point, we start by reviewing some of the necessary basics of differential geometry.
+	
+	\section{Basics of differential geometry}
+	
+	We adopt the modern view on differential geometry -- in which manifolds are abstractly defined rather than being  embedded in Euclidean space -- occasional lapsing to the traditional view when a more physical understanding is helpful to build intuition. 
+	
+	\subsection{Modern viewpoint}
+	  
+	\paragraph{Manifolds.}
+	A $d$-dimensional \emph{manifold} $M$ is a \red{locally compact Hausdorff} space, such that for every $t \in M$ there exists an open $U \subset M$ with $t \in U$ such that $U$ is homeomorphic to an open $\tilde{U} \in \Rd$. For such a manifold, a \emph{coordinate chart} is a pair $(\varphi,U)$ where $U$ is open, and $\varphi: U \to \varphi(U)$ is a homeomorphism. We call $(x_1(t),\ldots,x_d(t)) = \varphi(t)$ the \emph{local coordinates} on $U$.
+	
+	\paragraph{Tangent vector, tangent space for $\Rd$.}
+	There is a very obvious and intuitive definition of tangent space of embedded manifolds $M \subseteq \Rd$ that is reviewed in Section~\ref{subsec:traditional-viewpoint}. For abstract manifolds, however, the construction of tangent space comes from taking the (canonical) definition of tangent space $T_t(\Rd)$, and lifting it to $M$ by inverting coordinate charts. 
+	
+	Euclidean space $\Rd$ is a manifold. For current purposes, it suffices to think of a very simple atlas consisting of a single coordinate chart $(i,\Rd)$, where $i$ is the inclusion mapping $i(t) = t$. At a given point $t \in \Rd$, we define a \emph{tangent vector} $X_tf$ by its action on functions $f \in C^1(\Rd)$:
+	\begin{equation*}
+		X_tf := \sum_{i = 1}^{d} a_i \frac{\partial f}{\partial x_i}\Big|_{t}
+	\end{equation*}
+	We associate $\frac{\partial}{\partial x_i}|_{t}$ with the canonical basis vector $e_i$. It can be shown that $\frac{\partial}{\partial x_i}|_{x}, i = 1,\ldots,d$ forms a basis of the $d$-dimensional space of first-order differential operators (the subtlety being in defining what exactly this space is). This space is called the \emph{tangent space to $\Rd$ at $t$}, and is denoted by $T_t(\Rd)$. 
+	
+	\paragraph{Tangent vector, tangent space of an abstract manifold.}
+	Tangent vectors and tangent spaces of an abstract manifold $M$ are built by inverting coordinate charts, such that each differential operator $X_x \in T_x(\varphi(U))$ is ``pushed forward'' to a differential operator on functions $f \in C^1(U)$. 
+	
+	Let us consider a point $x \in \varphi(U) \subseteq \Rd$ for a coordinate chart $(\varphi,U)$. We have a basis $\partial/\partial x_i|_{x}$ of $T_x(\Rd)$, which we will use to define tangent space $T_t(M)$ at $t = \varphi^{-1}(t)$. To do this we need a way of taking first-order differential operators acting on $C^1(\varphi(U))$ to first-order differential operators acting on $C^1(U)$. (Again, we are not being clear about exactly what a first-order differential operator is.) This is accomplished via \emph{push-forward} $\varphi_{\ast,t}^{-1}$, defined by
+	\begin{equation*}
+		\bigg(\varphi_{\ast}^{-1} \circ X_{\varphi(t)}\bigg)f := X_{\varphi(t)}(f \circ \varphi^{-1})
+	\end{equation*}
+	This is a linear operator, and so the vectors $\varphi_{\ast,t}^{-1}(\partial/\partial x_i|_{\varphi(t)}), i = 1,\ldots,d$ are linearly independent. The span of these vectors is what called the \emph{tangent space of $M$ at $t$}, and is denoted by $T_t(M)$. In an abuse of notation, each $\varphi_{\ast,t}^{-1}(\partial/\partial x_i|_{\varphi(t)})$ is typically abbreviated to $(\partial/\partial x_i)|_{t}$; this basis is called the \emph{natural basis}.
+	
+	\paragraph{Vector field.}
+	A \emph{vector field} $X$ is a map that assigns a tangent vector $X_t$ to each point $t \in M$. In a moment we will define bundles and sections, and see that a vector field is just a section of the tangent bundle. Notationally, we write $Xf: M \to \Reals$ for the function 
+	\begin{equation*}
+		(Xf)_{t} := X_tf.
+	\end{equation*}
+	Given a coordinate chart $(\varphi,U)$ with local coordinates $(x_1(t),\ldots,x_d(t))$ the vector field $X$ can be written in terms of the basis $\partial/\partial x_i|_{t}$, as 
+	\begin{equation*}
+		X_t = \sum_{i = 1}^{d} a_i(t) \cdot \frac{\partial}{\partial x_i} \Big|_{t}. 
+	\end{equation*}
+	Smoothness of vector fields corresponds to smoothness of the functions $a_1(t),\ldots,a_d(t)$.
+	
+	\paragraph{Vector bundle, section, tangent bundle.} 
+	Just as vector fields assign a vector to each point in a manifold, we would like a way of assigning a vector space (e.g. tangent space) to each point in a manifold. This is what a vector bundle does.  Formally speaking, a \emph{vector bundle} is a triple $(E,M,F)$ -- where $M$ is the $d$ dimensional \emph{base manifold}, $F$ is a $q$-dimensional vector space called a \emph{fiber}, and $E$ is a $d + q$ dimensional manifold that locally ``looks like'' a product of $M$ and $F$ -- along with a assignment map $\pi: E \to M$ that basically assigns pairs $(t,v_t) \in E$ to $t$.  A \emph{section} is then a mapping $s: M \to E$.
+	
+	Intuitively, we should think of a vector bundle as assigning the vector space $\pi^{-1}(t)$ to each $t \in M$, and a section $s$ as a rule for picking an element of $\pi^{-1}(t)$ for each $t \in M$. According to this intuition, the \emph{tangent bundle} $T(M)$ simply assigns $T_t(M)$ to each $t$. A vector field is then a section of the tangent bundle. The cool thing about a vector bundle is that it inherits a differential structure from its base manifold, and is thus itself also a manifold. 
+	
+	If the fiber $F$ is not a vector space, then the above construction is called a \emph{fiber bundle}.
+	
+	\paragraph{Tensors, alternating and symmetric tensors, $k$-forms.}
+	A tensor is a (multi)linear operator on a vector space. Formally, a map $\omega$ is called a \emph{(n,m)-tensor} if 
+	$$
+	\omega \in L(\underbrace{V \oplus V \cdots V}_{n} \oplus \underbrace{V^{*} \oplus \cdots V^*}_{m};\R)
+	$$ 
+	where $V^*$ is the dual space of $V$, and $L(E;\R)$ is the space of multilinear operators mapping $E$ to $\R$, i.e. operators that are linear in each variable. The \emph{covariant} order is $n$, and the \emph{contravariant} order is $m$. Tensors are the fundamental building blocks of much Riemmanian geometry, since they will allow us to define things like length, angle, and derivative of vectors and vector fields. 
+	
+	Order $(k,0)$-tensors are referred to as \emph{covariant} tensors. An \emph{alternating} $k$-tensor $\omega$ is a covariant tensor that satisfies
+	\begin{equation*}
+		\gamma(v_{\omega(1)},\ldots,v_{\omega(k)}) = \sign(\omega) \cdot \gamma(v_{1},\ldots,v_{k}),
+	\end{equation*}
+	for all permutations $\omega \in S(k)$, while a \emph{symmetric} $k$-tensor is a covariant tensor that satisfies
+	\begin{equation*}
+		\gamma(v_{\omega(1)},\ldots,v_{\omega(k)}) = \gamma(v_{1},\ldots,v_{k}).
+	\end{equation*}
+	For a vector space $V$, we denote by $\Lambda^k(V)$ and ${\rm Sym}(\mc{T}_0^{k}(V))$ the space of alternating and symmetric $k$-tensors, respectively. 
+	
+	Just as we wanted a way of assigning a vector (space) to each point $t \in M$, we will want a way of assigning a tensor (space) to each $t \in M$. The objects which do this are called \emph{tensor fields} and \emph{tensor bundles}. An alternating tensor field maps each point $t \in M$) to a tensor in $\Lambda^{k}(T_t(M))$. The same is true for symmetric tensor fields. \emph{Tensor bundles} are collections of tensor fields equipped with an appropriate differential structure; for instance
+	$$
+	\Lambda^k(M) = \cup_{t \in M} \Lambda^k(T_t(M)).
+	$$
+	Finally a \emph{(differential) k-form} is a section of $\Lambda^k(M)$ (meaning of course that it is a tensor field.)
+	
+	\paragraph{Riemmanian manifold.}
+	A \emph{Riemannian manifold} is a manifold equipped with a Riemmanian metric. A \emph{Riemannian metric} is an order-2 covariant symmetric tensor field $g$ that is also positive definite; that is
+	$$
+	g_t(X_t,Y_t) = g_t(Y_t,X_t), \quad g_t(X_t,X_t) \geq 0, \quad g_t(X_t,X_t) = 0 \implies X_t = 0.
+	$$
+	
+	\paragraph{Sphere bundle, orthonormal frame bundle.}
+	Riemannian manifolds have a notion of length and angle, allowing us to introduce an important pair of fiber bundles. The \emph{sphere bundle} is the fiber bundle of all unit length vectors: that is, it consists of all point,vector pairs $(t,X_t)$ such that $g_t(X_t,X_t) = 1$.  The orthonormal frame bundle consists of all point/orthonormal basis pairs, that is, it consists of $(t,X_{t}^1,\ldots,X_{t}^d)$ such that $X_t^1,\ldots,X_t^d$ is an orthonormal basis of $T_t(M)$. 
+	
+	\paragraph{Covariant derivative, connection.}
+	Covariant derivative is the ``correct'' way of defining differentiation of one vector field $Y$ in the direction of another vector field $X$, correct in the sense of taking into account the curvature of $M$.  
+	
+	\ag{TO COME}
+
+	
+	
+	
+	\begin{itemize}
+		\item Covariant derivative, gradient.
+		\item Connection,  Levi-Civit\'{a} connection, Christoffel symbols.
+		\item Covariant Hessian.
+		\item Exponential map.
+		\item Geodesics.
+		\item Normal coordinates.
+	\end{itemize}
+	
+	
+	\subsection{Traditional viewpoint}
+	\label{subsec:traditional-viewpoint}
+	\paragraph{Tangent vector, tangent space for embedded manifold.}
+	We begin by reviewing what it means for a vector $v \in \Rd$ to be tangent to a manifold $M$ embedded in $\Rd$ (i.e. a curve or surface). Suppose $M$ is embedded in $\Rd$ and consider a given $x \in M$. We say $v$ is tangent to $x$ if there exists a curve $\gamma: (-\delta,\delta) \to M$ such that $\gamma(0) = x$ and $\gamma'(0) = v$. We write $T_x(M)$ for the \emph{tangent space} of $M$ at $x$.
+	
+	We can also think of tangent vectors $v$ as first-order differential operators, by associating them with the directional derivative of a function $f$ in the direction $v$. That is, we associate each $v \in T_t(M)$ with a differential operator $X_x = x + \sum v_i e_i$, defined by its action on functions $f \in C^1(M)$,
+	\begin{equation*}
+		X_xf := \sum v_i \frac{\partial f}{\partial x_i} \Big|_{x}.
+	\end{equation*}
+	We will also use the language \emph{tangent vector} to refer to $X_x$. Again we write $T_x(M)$ for the space of tangent vectors to $M$ at $x$. This is a vector space when equipped with the obvious definition of addition, and clearly $\frac{\partial}{\partial x_i}|_x, i = 1,\ldots,d$ forms a linearly independent basis of $T_x(M)$. 
+	
+	\section{Examples}
+	
+	\subsection{Euclidean}
+	
+	\subsection{Curved exponential family}
+	
+	\subsection{Kac-Rice test statistic}
+	
+\end{document}
