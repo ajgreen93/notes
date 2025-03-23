@@ -72,7 +72,8 @@
 	We associate $\frac{\partial}{\partial x_i}|_{t}$ with the canonical basis vector $e_i$. It can be shown that $\frac{\partial}{\partial x_i}|_{x}, i = 1,\ldots,d$ forms a basis of the $d$-dimensional space of first-order differential operators (the subtlety being in defining what exactly this space is). This space is called the \emph{tangent space to $\Rd$ at $t$}, and is denoted by $T_t(\Rd)$. 
 	
 	\paragraph{Tangent vector, tangent space of an abstract manifold.}
-	Tangent vectors and tangent spaces of an abstract manifold $M$ are built by inverting coordinate charts, such that each differential operator $X_x \in T_x(\varphi(U))$ is ``pushed forward'' to a differential operator on functions $f \in C^1(U)$. 
+	\ag{The below is a coordinate-based definition; give the coordinate-free definition as well.}
+	Tangent vectors and tangent spaces of an abstract manifold $M$ can be built by inverting coordinate charts, such that each differential operator $X_x \in T_x(\varphi(U))$ is ``pushed forward'' to a differential operator on functions $f \in C^1(U)$. 
 	
 	Let us consider a point $x \in \varphi(U) \subseteq \Rd$ for a coordinate chart $(\varphi,U)$. We have a basis $\partial/\partial x_i|_{x}$ of $T_x(\Rd)$, which we will use to define tangent space $T_t(M)$ at $t = \varphi^{-1}(t)$. To do this we need a way of taking first-order differential operators acting on $C^1(\varphi(U))$ to first-order differential operators acting on $C^1(U)$. (Again, we are not being clear about exactly what a first-order differential operator is.) This is accomplished via \emph{push-forward} $\varphi_{\ast,t}^{-1}$, defined by
 	\begin{equation*}
@@ -115,11 +116,11 @@
 	\end{equation*}
 	For a vector space $V$, we denote by $\Lambda^k(V)$ and ${\rm Sym}(\mc{T}_0^{k}(V))$ the space of alternating and symmetric $k$-tensors, respectively. 
 	
-	Just as we wanted a way of assigning a vector (space) to each point $t \in M$, we will want a way of assigning a tensor (space) to each $t \in M$. The objects which do this are called \emph{tensor fields} and \emph{tensor bundles}. An alternating tensor field maps each point $t \in M$) to a tensor in $\Lambda^{k}(T_t(M))$. The same is true for symmetric tensor fields. \emph{Tensor bundles} are collections of tensor fields equipped with an appropriate differential structure; for instance
+	Just as we wanted a way of assigning a vector (space) to each point $t \in M$, we will want a way of assigning a tensor (space) to each $t \in M$. The objects which do this are called \emph{tensor fields} and \emph{tensor bundles}. An alternating tensor field maps each point $t \in M$ to a tensor in $\Lambda^{k}(T_t(M))$. The same is true for symmetric tensor fields. \emph{Tensor bundles} are collections of tensor fields equipped with an appropriate differential structure; for instance
 	$$
 	\Lambda^k(M) = \cup_{t \in M} \Lambda^k(T_t(M)).
 	$$
-	Finally a \emph{(differential) k-form} is a section of $\Lambda^k(M)$ (meaning of course that it is a tensor field.)
+	Finally a \emph{(differential) k-form} is a section of $\Lambda^k(M)$ (meaning that it can be identified with a tensor field.)
 	
 	\paragraph{Riemmanian manifold.}
 	A \emph{Riemannian manifold} is a manifold equipped with a Riemmanian metric. A \emph{Riemannian metric} is an order-2 covariant symmetric tensor field $g$ that is also positive definite; that is
@@ -130,8 +131,12 @@
 	\paragraph{Sphere bundle, orthonormal frame bundle.}
 	Riemannian manifolds have a notion of length and angle, allowing us to introduce an important pair of fiber bundles. The \emph{sphere bundle} is the fiber bundle of all unit length vectors: that is, it consists of all point,vector pairs $(t,X_t)$ such that $g_t(X_t,X_t) = 1$.  The orthonormal frame bundle consists of all point/orthonormal basis pairs, that is, it consists of $(t,X_{t}^1,\ldots,X_{t}^d)$ such that $X_t^1,\ldots,X_t^d$ is an orthonormal basis of $T_t(M)$. 
 	
-	\paragraph{Covariant derivative, connection.}
-	Covariant derivative is the ``correct'' way of defining differentiation of one vector field $Y$ in the direction of another vector field $X$, correct in the sense of taking into account the curvature of $M$.  
+	\paragraph{Covariant derivative for surfaces.}
+	Covariant derivative is the ``correct'' way of defining differentiation of one vector field $Y$ in the direction of another vector field $X$, correct in the sense of taking into account the curvature of $M$. However there are some subtleties involved in defining this notion of differentiation. As in the case of tangent vectors, good intuition is built by first considering the case where $M$ is embedded in $\Rd$.
+	
+	Suppose $M$ is a surface, i.e. a manifold embedded in $\Rd$. For a point $t \in M$, we are interested in the derivative of a vector field $Y$ in the direction of another field $X$, at a point $t \in M$. There are a few issues, the most basic being that moving in the direction of $X$ may take us off $M$.  A ``first principles'' way of accounting for this would be to define a curve $c: [-\delta,\delta] \to U$ centered at $t$ in the direction $X_t$ -- formally, $c(0) = t, \dot{c}(0) = X_t$ -- and consider the instantaneous rate of change. The second issue is that $Y_{c(\delta)}$ and $Y_{(c(0))}$ are in different tangent spaces, and therefore cannot be subtracted; but this is easily fixable by identifying both tangent spaces with $\Rd$. 
+	
+	\paragraph{Connection, Levi-Civit\'{a} connection.}  
 	
 	\ag{TO COME}
 
