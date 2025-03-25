@@ -62,24 +62,56 @@
 	\paragraph{Manifolds.}
 	A $d$-dimensional \emph{manifold} $M$ is a \red{locally compact Hausdorff} space, such that for every $t \in M$ there exists an open $U \subset M$ with $t \in U$ such that $U$ is homeomorphic to an open $\tilde{U} \in \Rd$. For such a manifold, a \emph{coordinate chart} is a pair $(\varphi,U)$ where $U$ is open, and $\varphi: U \to \varphi(U)$ is a homeomorphism. We call $(x_1(t),\ldots,x_d(t)) = \varphi(t)$ the \emph{local coordinates} on $U$.
 	
-	\paragraph{Tangent vector, tangent space for $\Rd$.}
-	There is a very obvious and intuitive definition of tangent space of embedded manifolds $M \subseteq \Rd$ that is reviewed in Section~\ref{subsec:traditional-viewpoint}. For abstract manifolds, however, the construction of tangent space comes from taking the (canonical) definition of tangent space $T_t(\Rd)$, and lifting it to $M$ by inverting coordinate charts. 
+	\paragraph{Tangent vectors and derivations.}
+	There is a very obvious and intuitive definition of tangent vectors and tangent spaces of an embedded manifold $M \subseteq \Rd$ that is reviewed in Section~\ref{subsec:traditional-viewpoint}. These vectors can be associated with directional derivatives in an obvious way. The abstraction of tangent vectors to abstract (not embedded) manifolds comes from generalizing the notion of directional derivatives to what are called derivations.
 	
-	Euclidean space $\Rd$ is a manifold. For current purposes, it suffices to think of a very simple atlas consisting of a single coordinate chart $(i,\Rd)$, where $i$ is the inclusion mapping $i(t) = t$. At a given point $t \in \Rd$, we define a \emph{tangent vector} $X_tf$ by its action on functions $f \in C^1(\Rd)$:
+	A \emph{derivation} $X_p$ of a function $f \in C^{\infty}(M)$ at a point $p$ satisfies the product (Liebniz) rule and linearity:
 	\begin{equation*}
-		X_tf := \sum_{i = 1}^{d} a_i \frac{\partial f}{\partial x_i}\Big|_{t}
+	\begin{aligned}
+		X_p(fg) & = X_p(f)g + f X_p(g) \\
+		X_p(af + b g) &= a X_p(f) + b X_p(g), \quad {\rm for} a,b \in \R.
+	\end{aligned}
 	\end{equation*}
-	We associate $\frac{\partial}{\partial x_i}|_{t}$ with the canonical basis vector $e_i$. It can be shown that $\frac{\partial}{\partial x_i}|_{x}, i = 1,\ldots,d$ forms a basis of the $d$-dimensional space of first-order differential operators (the subtlety being in defining what exactly this space is). This space is called the \emph{tangent space to $\Rd$ at $t$}, and is denoted by $T_t(\Rd)$. 
+	When equipped with the obvious operations of addition and scaling, the space of derivations is a vector space of dimension $d = \dim M$, which we call the \emph{tangent space} to $M$ at $p$, and denote by $T_p(M)$.
 	
-	\paragraph{Tangent vector, tangent space of an abstract manifold.}
-	\ag{The below is a coordinate-based definition; give the coordinate-free definition as well.}
-	Tangent vectors and tangent spaces of an abstract manifold $M$ can be built by inverting coordinate charts, such that each differential operator $X_x \in T_x(\varphi(U))$ is ``pushed forward'' to a differential operator on functions $f \in C^1(U)$. 
+	\paragraph{Coordinate-wise derivatives.}
+	We now detail how derivations are represented in local coordinates. This is accomplished by taking the standard basis of $T_t(\Rd)$ and ``pushing forward'' to a basis of $T_{p}(M)$. 
 	
-	Let us consider a point $x \in \varphi(U) \subseteq \Rd$ for a coordinate chart $(\varphi,U)$. We have a basis $\partial/\partial x_i|_{x}$ of $T_x(\Rd)$, which we will use to define tangent space $T_t(M)$ at $t = \varphi^{-1}(t)$. To do this we need a way of taking first-order differential operators acting on $C^1(\varphi(U))$ to first-order differential operators acting on $C^1(U)$. (Again, we are not being clear about exactly what a first-order differential operator is.) This is accomplished via \emph{push-forward} $\varphi_{\ast,t}^{-1}$, defined by
+	We start with the trivial case where $M = \Rd$ and all we are doing is redefining terms. We give $M$ coordinates via the trivial chart $(\varphi,M)$, where $\varphi(t) = t$ is the inclusion map. At a given point $t$, we use the notation
 	\begin{equation*}
-		\bigg(\varphi_{\ast}^{-1} \circ X_{\varphi(t)}\bigg)f := X_{\varphi(t)}(f \circ \varphi^{-1})
+		\bigg(\frac{\partial}{\partial x_i}\Big|_{t}\bigg)f := \frac{\partial f}{\partial x_i}(t),
 	\end{equation*}
-	This is a linear operator, and so the vectors $\varphi_{\ast,t}^{-1}(\partial/\partial x_i|_{\varphi(t)}), i = 1,\ldots,d$ are linearly independent. The span of these vectors is what called the \emph{tangent space of $M$ at $t$}, and is denoted by $T_t(M)$. In an abuse of notation, each $\varphi_{\ast,t}^{-1}(\partial/\partial x_i|_{\varphi(t)})$ is typically abbreviated to $(\partial/\partial x_i)|_{t}$; this basis is called the \emph{natural basis}.
+	to refer to the partial derivatives of $f$ at point $t$. The set $\{\frac{\partial}{\partial x_i}|_{t}:i = 1,\ldots,d\}$ forms a basis of $T_t(\Rd)$, and thus any derivation $X_t \in T_t(\Rd)$ can be represented as 
+	\begin{equation}
+	\label{eqn:tangent-vector-in-local-coordinates}
+		X_t := \sum_{i = 1}^{d} a^i \frac{\partial}{\partial x_i}\Big|_{t}
+	\end{equation}
+	Now suppose $M$ is an abstract manifold, and consider the chart $(\varphi,U)$. For a given $p \in U$, the \emph{push-forward} $g_{\ast}: T_{\varphi(p)}(\Rd) \to T_{p}(M)$ of $\varphi^{-1}$ is defined by 
+	\begin{equation}
+	\label{eqn:push-forward}
+		\bigg(g_{\ast}(X_{\varphi(p)})\bigg)f := X_{\varphi(p)}(f \circ \varphi^{-1})
+	\end{equation}
+	Now pushing forward the standard basis vectors results in the set
+	\begin{equation}
+	\label{eqn:natural-basis}
+		\bigg\{g_{\ast}\Big(\frac{\partial}{\partial x_i}\Big|_{\varphi(p)}\Big): i = 1,\ldots, d\bigg\}.
+	\end{equation}
+	It can be shown that $g_{\ast}$ is injective and linear, and therefore~\eqref{eqn:natural-basis} is a basis of $T_p(M)$, called the \emph{natural basis}. The standard notation used is to denote $\frac{\partial}{\partial x_i}|_{p} := g_{\ast}(\frac{\partial}{\partial x_i}|_{\varphi(p)})$.\footnote{This is not strictly speaking an abuse of notation, since we have never before used the notation $\frac{\partial}{\partial x_i}|_{p}$ when $p$ is a point at an abstract manifold. Nevertheless, it may take you a while to get used to it.} Thus every derivation $X_p \in T_p(M)$ can be written in local coordinates as 
+	\begin{equation}
+	\label{eqn:derivation-in-local-coordinates}
+	X_p := \sum_{i = 1}^{d} a^i \frac{\partial}{\partial x_i}\Big|_{p},
+	\end{equation}
+	which is almost exactly the same as~\eqref{eqn:tangent-vector-in-local-coordinates}. 
+	
+	\paragraph{Aside: push-forward as the chain rule.} As a bit of useful intuition, one should think of~\eqref{eqn:push-forward} as generalizing the chain rule of calculus. Suppose $\varphi:\Rd \to \Rd$ was simply a change of coordinates of $\Rd$. In that case, the push-forward of $\partial/\partial x_i|_{\varphi(t)}$ lives in $T_{t}(\Rd)$, and can be represented as a linear combination of the standard basis vectors:
+	\begin{equation*}
+		g_{\ast}\Big(\frac{\partial}{\partial x_i}\Big|_{\varphi(t)}\Big) = \sum_{i = 1}^{d} b^i \frac{\partial}{\partial x_i}\Big|_{t}.
+	\end{equation*}
+	Consequently, for a given directional derivative $\frac{\partial}{\partial x_j}|_{\varphi(t)}$, equation~\eqref{eqn:push-forward} reads
+	\begin{equation*}
+		\sum_{i = 1}^{d} b^i \frac{\partial f}{\partial x_i}(t) = \frac{\partial}{\partial x_i}\Big|_{\varphi(t)}\big(f \circ \varphi^{-1}\big),
+	\end{equation*}
+	which is the chain rule of calculus in local coordinates $b^i = \frac{\partial \varphi^{-1}}{\partial x_i}(\varphi(t))$. 
 	
 	\paragraph{Vector field.}
 	A \emph{vector field} $X$ is a map that assigns a tangent vector $X_t$ to each point $t \in M$. In a moment we will define bundles and sections, and see that a vector field is just a section of the tangent bundle. Notationally, we write $Xf: M \to \Reals$ for the function 
@@ -153,16 +185,62 @@
 	\end{itemize}
 	
 	
-	\subsection{Traditional viewpoint}
+	\subsection{Traditional viewpoint for curves}
 	\label{subsec:traditional-viewpoint}
-	\paragraph{Tangent vector, tangent space for embedded manifold.}
-	We begin by reviewing what it means for a vector $v \in \Rd$ to be tangent to a manifold $M$ embedded in $\Rd$ (i.e. a curve or surface). Suppose $M$ is embedded in $\Rd$ and consider a given $x \in M$. We say $v$ is tangent to $x$ if there exists a curve $\gamma: (-\delta,\delta) \to M$ such that $\gamma(0) = x$ and $\gamma'(0) = v$. We write $T_x(M)$ for the \emph{tangent space} of $M$ at $x$.
 	
-	We can also think of tangent vectors $v$ as first-order differential operators, by associating them with the directional derivative of a function $f$ in the direction $v$. That is, we associate each $v \in T_t(M)$ with a differential operator $X_x = x + \sum v_i e_i$, defined by its action on functions $f \in C^1(M)$,
+	This section specializes the above development to the case of a one-dimensional manifold embedded in $\Rd$. Specifically, we will assume that as a set, $N = \eta(M)$ is given by the graph of a (smooth) function $\eta: M \to \Rd$, and $M = [0,1]$. In this case $M$ comes equipped with a canonical coordinates (given by the inclusion map) and additionally inherits a metric from the Euclidean metric in $\Rd$.
+	
+	Notation: we write $\dot{\eta}(\theta) = (d/d\theta \eta_1,\ldots,d/d\theta \eta_d)$, and likewise for $\ddot{\eta}(\theta)$.  
+	
+	\paragraph{Tangent vectors.}
+	For a given $p = \eta(\theta), \theta \in \R$ and a vector $v \in \Rd$, we say $v$ is tangent to $N$ at $p$ if there exists a curve $\gamma: (-\delta,\delta) \to N$ such that $\dot{\gamma}(0) = v$. At a given point $p \in M, p = \eta(\theta)$, the vector $\dot{\eta}_{\theta}$ is tangent to $N$. The tangent space $T_{p}(N) \subseteq T_{p}(\Rd)$ can be identified with the one-dimensional subspace of $\Rd$ spanned by $\dot{\eta}_{\theta}$. We can identify tangent vectors with derivations in local coordinates: at a point $p = \eta_{\theta} \in M$ we define
+	\begin{equation}
+	\label{eqn:curve-derivation}
+		\dot{\eta}_{\theta}(f) := \frac{d}{d\theta} (f \circ \eta)\Big|_{\eta(\theta) = p},
+	\end{equation}
+	and extend this to general $v_{\theta} \in T_{p}(N)$ by linearity. Vector fields $V \in T(N)$ are then of the form $V_{\theta} := a(\theta) \cdot \dot{\eta}_{\theta}$. If $f$ is a function of $\Rd$ (or can be smoothly extended to one), then by the chain rule
 	\begin{equation*}
-		X_xf := \sum v_i \frac{\partial f}{\partial x_i} \Big|_{x}.
+		\dot{\eta}_{\theta}(f) = \dotp{\dot{\eta}_{\theta}}{\partial f},
 	\end{equation*}
-	We will also use the language \emph{tangent vector} to refer to $X_x$. Again we write $T_x(M)$ for the space of tangent vectors to $M$ at $x$. This is a vector space when equipped with the obvious definition of addition, and clearly $\frac{\partial}{\partial x_i}|_x, i = 1,\ldots,d$ forms a linearly independent basis of $T_x(M)$. 
+	where $\partial f$ is the gradient of $f$ in $\Rd$. 
+	
+	\paragraph{Metric.} As promised, $N$ (and therefore $M$) will inherit a metric from its embedding into $\Rd$. Specifically, we define
+	\begin{equation*}
+		g_{\theta}(\frac{d}{\,d\theta}, \frac{d}{\,d\theta}) = \hat{g}_{p}(\dot{\eta}_{\theta},\dot{\eta}_{\theta}) =  \dotp{\dot{\eta}_{\theta}}{\dot{\eta}_{\theta}}.
+	\end{equation*}
+
+	\paragraph{Gradient, covariant derivative.} 
+	The (Riemannian)-gradient $\nabla f$ of a function $f \in C^1(N)$ is
+	$$
+	\nabla f_p = \frac{\dotp{\partial f_p}{\dot{\eta}_{\theta}}}{\dotp{\dot{\eta}_{\theta}}{\dot{\eta}_{\theta}}} \dot{\eta}_{\theta}.
+	$$
+	The covariant derivative $\nabla f$ is the tensor field 
+	\begin{equation*}
+		(\nabla f(v))_{p} := v_p(f) = \dotp{\nabla f}{v_p}.
+	\end{equation*}
+	Notice that gradient and covariant derivative are the same in the sense that $\nabla f(v) = \dotp{\nabla f_p}{v}$. 
+	
+	\paragraph{Covariant derivative of a vector field.}
+	We now specify how to differentiate a vector field $v(\theta) = a(\theta) \dot{\eta}_{\theta}$ in the direction of $\dot{\eta}_{\theta}$. An obvious choice is to simply differentiate $v$ with respect to $\theta$,
+	\begin{equation*}
+		\frac{d}{d\theta} (v) = a'(\theta) \dot{\eta}_{\theta} + a(\theta) \ddot{\eta}_{\theta},
+	\end{equation*}
+	but since $\ddot{\eta}_{\theta}$ is not in $T_{\eta_{\theta}}(N)$ this would lead to the undesirable result $(\nabla_{\dot{\eta}} v)$ is not a tangent vector field. Instead we take this and project it onto $T_{\eta_{\theta}}(M)$, leaving
+	\begin{equation*}
+		(\nabla_{\dot{\eta}} v)(\theta) := a'(\theta) \dot{\eta}_{\theta} + a(\theta) \frac{\dotp{\ddot{\eta}_{\theta}}{\dot{\eta}_{\theta}}}{\dotp{\dot{\eta}_{\theta}}{\dot{\eta}_{\theta}}} \dot{\eta}_{\theta} = a'(\theta) \dot{\eta}_{\theta} + \Gamma_{\theta} v(\theta). 
+	\end{equation*}
+	The term $\Gamma_{\theta} = \frac{\dotp{\ddot{\eta}_{\theta}}{\dot{\eta}_{\theta}}}{\dotp{\dot{\eta}_{\theta}}{\dot{\eta}_{\theta}}}$ is the Christoffel symbol. It could also have been written $\Gamma_{\theta} = \frac{1}{2}\frac{g'(\theta)}{g(\theta)}$, where $g(\theta) := g_{\theta}(d/d\theta,d/d\theta)$, showing more cleanly how it depends on both metric and coordinates, but not on the particular embedding into $\Rd$ (except through the metric).
+	
+	\paragraph{Covariant Hessian.}
+	The covariant Hessian is defined by
+	\begin{equation}
+		\label{eqn:covariant-hessian}
+		\nabla^2 f(v,v') = v' \partial^2 f v - (\nabla_v v')f.
+	\end{equation}
+	That is, it takes the second-order partial derivative of $f$ in the direction $(v,v')$ and subtracts the contributions that come from ``incorrectly'' differentiating $v'$ in the direction $v$. 
+	
+	Notice that we could have also defined $\nabla^2 f = \nabla(\nabla f)$ -- although notice we have not yet defined what it means to take covariant derivative of a tensor. 
+	
 	
 	\section{Examples}
 	
